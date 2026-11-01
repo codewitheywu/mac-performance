@@ -22,6 +22,7 @@ The address above is for your reference only. In the UI it is rendered from the 
 ## Routes
 
 Public: `/`, `/about`, `/services`, `/accessories`, `/contacts`
+Account: `/login`, `/signup` (`noindex`, not in the sitemap)
 Customer area and `/admin` area: structure lives in the repo; inspect `app/` before adding routes.
 
 ## Users and permissions
@@ -47,3 +48,4 @@ This build is a sample to show the owner. There is no database yet, so rules 1 a
 
 - Business data lives in `src/lib/shop-data.ts`, copied from the shop sign, macperformance.ph and the Google listing.
 - The rating and reviews live in `src/lib/google-snapshot.ts`, dated November 2026. A Places API key replaces them with live data automatically.
+- `/login` and `/signup` are front end only. Their form validates in the browser and sends nothing, and each page says so. Real accounts need PostgreSQL, an auth library and a Server Action that re-runs `validateAuthForm` from `src/lib/auth-rules.ts`, per `roles/05-security.md`.
