@@ -11,6 +11,7 @@ The content is real. The phone numbers, hours, services, accessories, photos and
 - `/services`
 - `/accessories`
 - `/contacts`
+- `/login` and `/signup`, which check what you type but save and send nothing, because accounts need a database
 
 ## Run it
 
@@ -21,12 +22,24 @@ npm run dev
 
 Node 20 or newer is required. Next.js uses port 3000 by default. To pick another port, run `npx next dev -p 3120`.
 
+## Test on a phone
+
+Connect the phone to the same Wi-Fi as the computer, then run:
+
+```bash
+npm run build
+npx next start -H 0.0.0.0 -p 3121
+```
+
+Open `http://<computer's IP address>:3121` on the phone. On Windows, allow Node through the firewall on private networks when asked.
+
 ## Before going live
 
 - Get the owner's approval for the photos, reviews and wording.
 - Replace `src/lib/shop-data.ts` and `src/lib/google-snapshot.ts` with a database and CMS.
 - Add `GOOGLE_PLACES_API_KEY` and `GOOGLE_PLACE_ID` for a live rating. See `.env.example`.
 - Set the final domain in `src/lib/site.ts`.
+- Build real accounts behind `/login` and `/signup`, with a privacy notice for the details they collect.
 
 The copied rating and reviews in `src/lib/google-snapshot.ts` do not update themselves. Refresh them, or add the API key.
 

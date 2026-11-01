@@ -23,7 +23,7 @@ export function AboutSection({ about }: { about: string }) {
           </h2>
           <p className="text-lg leading-relaxed font-light text-white/85">{about}</p>
           <Link
-            className="text-gold decoration-gold/50 hover:decoration-gold text-sm font-medium underline underline-offset-4 transition-colors duration-200 ease-race"
+            className="text-gold decoration-gold/50 hover:decoration-gold -my-3 inline-block py-3 text-sm font-medium underline underline-offset-4 transition-colors duration-200 ease-race"
             href="/about"
           >
             More about us

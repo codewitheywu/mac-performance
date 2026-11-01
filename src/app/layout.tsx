@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Montserrat } from "next/font/google";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { SmoothWheel } from "@/components/smooth-wheel";
@@ -29,6 +29,11 @@ export const metadata: Metadata = {
   },
   description:
     "Car repairs, window tinting, sound systems and parts on Gordon Ave, Olongapo City.",
+};
+
+// Phone browsers tint their address bar with this.
+export const viewport: Viewport = {
+  themeColor: "black",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -17,7 +17,7 @@ export function SectionHeading({ id, title, link }: SectionHeadingProps) {
       </h2>
       {link ? (
         <Link
-          className="text-gold decoration-gold/50 hover:decoration-gold text-sm font-medium underline underline-offset-4 transition-colors duration-200 ease-race"
+          className="text-gold decoration-gold/50 hover:decoration-gold -my-3 inline-block py-3 text-sm font-medium underline underline-offset-4 transition-colors duration-200 ease-race"
           href={link.href}
         >
           {link.label}

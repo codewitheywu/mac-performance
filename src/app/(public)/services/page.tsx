@@ -33,7 +33,7 @@ export default async function ServicesPage() {
         <p className="text-base text-white/85">
           Buying a stereo, tint or an alarm?{" "}
           <Link
-            className="text-gold decoration-gold/50 hover:decoration-gold underline underline-offset-4"
+            className="text-gold decoration-gold/50 hover:decoration-gold -my-3 inline-block py-3 underline underline-offset-4"
             href="/accessories"
           >
             See accessories
