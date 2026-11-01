@@ -42,6 +42,11 @@ export function Hero({
         />
       </div>
 
+      <div
+        aria-hidden="true"
+        className="hero-flare flare-in inset-x-0 top-0 -z-10 h-56 sm:h-96 lg:inset-y-0 lg:right-auto lg:h-auto lg:w-3/4"
+      />
+
       <div className="shell flex min-h-[calc(100svh-5rem)] flex-col justify-end gap-8 pt-52 pb-6 sm:pt-88 lg:justify-between lg:pt-24">
         <div className="max-w-md lg:max-w-[20rem] xl:max-w-sm 2xl:max-w-md">
           <h1

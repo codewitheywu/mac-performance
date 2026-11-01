@@ -6,6 +6,7 @@ import { PageHero } from "@/components/page-hero";
 import { getAccessories, getBusinessInfo } from "@/lib/content";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/accessories" },
   title: "Accessories",
   description:
     "Window tinting, sound systems, car alarms, car accessories, auto parts and air fresheners at MAC Automotive Performance.",
@@ -30,6 +31,7 @@ export default async function AccessoriesPage() {
       />
 
       <div className="shell flex flex-col gap-12 py-20 lg:py-28">
+        <h2 className="sr-only">What we carry</h2>
         <ul
           aria-label="Accessories"
           className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"

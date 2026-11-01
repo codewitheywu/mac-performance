@@ -80,9 +80,10 @@ export function ReviewsSection({ place }: { place: GooglePlace }) {
   return (
     <section
       aria-labelledby="reviews-title"
-      className="border-gold/25 border-y py-20 lg:py-28"
+      className="border-gold/25 relative isolate overflow-clip border-y py-20 lg:py-28"
       id="reviews"
     >
+      <div aria-hidden="true" className="hero-flare inset-0 -z-10 opacity-60" />
       <div className="shell grid gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="reveal lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
           <p className="text-gold text-xs font-semibold tracking-[0.3em] uppercase">

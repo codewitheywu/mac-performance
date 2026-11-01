@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { AboutSection } from "@/components/about-section";
 import { AccessoriesRail } from "@/components/accessories-rail";
 import { Hero } from "@/components/hero";
@@ -11,6 +13,10 @@ import {
 } from "@/lib/content";
 import { getGooglePlace } from "@/lib/google-place";
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
 export default async function Home() {
   const [info, services, accessories, place] = await Promise.all([
     getBusinessInfo(),
@@ -19,22 +25,8 @@ export default async function Home() {
     getGooglePlace(),
   ]);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "AutoRepair",
-    name: "MAC Automotive Performance",
-    address: info.address,
-    telephone: info.phone,
-  };
-
   return (
     <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-        }}
-        type="application/ld+json"
-      />
       {/* Same order as the navbar, so the page reads one button after another. */}
       <Hero info={info} place={place} />
       <AboutSection about={info.about} />

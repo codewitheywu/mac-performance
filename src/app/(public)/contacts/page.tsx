@@ -5,6 +5,7 @@ import { PageHero } from "@/components/page-hero";
 import { getBusinessInfo } from "@/lib/content";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contacts" },
   title: "Contacts",
   description:
     "Phone numbers, opening hours, address and a map to MAC Automotive Performance.",

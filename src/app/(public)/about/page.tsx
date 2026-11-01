@@ -8,6 +8,7 @@ import { getBusinessInfo } from "@/lib/content";
 import { getGooglePlace } from "@/lib/google-place";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about" },
   title: "About Us",
   description:
     "MAC Automotive Performance is a car repair and accessories shop with a service bay and an accessories store in one building.",

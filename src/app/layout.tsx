@@ -2,6 +2,7 @@
 import { Bebas_Neue, Montserrat } from "next/font/google";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { SmoothWheel } from "@/components/smooth-wheel";
+import { SITE_URL } from "@/lib/site";
 import "@/styles/globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -16,6 +17,12 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    locale: "en_PH",
+    siteName: "MAC Automotive Performance",
+    type: "website",
+  },
   title: {
     default: "MAC Automotive Performance | Car Repair and Accessories, Olongapo City",
     template: "%s | MAC Automotive Performance",

@@ -7,6 +7,7 @@ import { ServicesBoard } from "@/components/services-board";
 import { getBusinessInfo, getServices } from "@/lib/content";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services" },
   title: "Services",
   description:
     "Oil change, brakes, suspension, engine, electrical, tune-up and troubleshooting at MAC Automotive Performance.",
