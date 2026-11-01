@@ -79,7 +79,10 @@ export function Hero({
         <dl className="rise-in glass-card bg-black/70! grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           <div className="flex flex-col-reverse gap-1 p-4">
             <dt className={factLabelClass}>
-              {info.hours[0]?.days}, {info.hours[0]?.time}
+              {info.hours
+                .slice(0, -1)
+                .map((entry) => `${entry.days}: ${entry.time}`)
+                .join(" · ")}
             </dt>
             <dd className="font-display text-2xl tracking-wide">
               <OpenStatus openHours={info.openHours} />

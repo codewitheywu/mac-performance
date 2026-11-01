@@ -40,3 +40,10 @@ There are exactly two account roles. Do not add others without approval.
 2. **Live rating.** The customer rating comes from the shop's Google Maps listing via the Places API, fetched server-side and cached. Never display a fixed rating number.
 3. **Chat scope.** Real-time chat is customer ↔ admin only. Customers can never see or message other customers.
 4. **Layout anchor.** The NAP (name, address, phone) section with the Google Maps embed sits immediately before the footer on public pages that use it.
+
+## Current status: sample site
+
+This build is a sample to show the owner. There is no database yet, so rules 1 and 2 are met by stopgaps until the project is approved:
+
+- Business data lives in `src/lib/shop-data.ts`, copied from the shop sign, macperformance.ph and the Google listing.
+- The rating and reviews live in `src/lib/google-snapshot.ts`, dated November 2026. A Places API key replaces them with live data automatically.

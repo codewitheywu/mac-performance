@@ -2,14 +2,16 @@
 
 import { type ComponentProps, useEffect, useRef } from "react";
 
-import { createGlide, wheelPixels } from "@/lib/glide";
+import { createGlide, MIN_NOTCH_DELTA, wheelPixels } from "@/lib/glide";
 
 // While the page is already moving the rail must not grab the wheel as it
 // passes under the pointer, so it only takes over after a short pause.
 const PAGE_SCROLL_LATCH_MS = 220;
+// scrollLeft is fractional under display scaling, scrollWidth is not.
+const END_TOLERANCE = 2;
 
-// A list that turns the vertical wheel into sideways scrolling. At either end
-// it lets go, so the wheel can never get stuck on the rail.
+// A list that turns the mouse wheel into sideways scrolling. At either end it
+// lets go, so the wheel can never get stuck on the rail. Trackpads stay native.
 export function WheelRail({ children, ...props }: ComponentProps<"ul">) {
   const railRef = useRef<HTMLUListElement>(null);
 
@@ -38,10 +40,13 @@ export function WheelRail({ children, ...props }: ComponentProps<"ul">) {
         return;
       }
 
+      const delta = wheelPixels(event);
+      if (Math.abs(delta) < MIN_NOTCH_DELTA) return;
+
       const from = glide.isRunning() ? glide.target() : rail.scrollLeft;
       const maxScroll = rail.scrollWidth - rail.clientWidth;
-      const next = Math.min(Math.max(from + wheelPixels(event), 0), maxScroll);
-      if (next === from) return;
+      const next = Math.min(Math.max(from + delta, 0), maxScroll);
+      if (Math.abs(next - from) < END_TOLERANCE) return;
 
       event.preventDefault();
       if (prefersReducedMotion) {

@@ -2,12 +2,11 @@
 
 import { useEffect } from "react";
 
-import { createGlide, wheelPixels } from "@/lib/glide";
+import { createGlide, MIN_NOTCH_DELTA, wheelPixels } from "@/lib/glide";
 
 // A mouse wheel moves the page in notches. This glides toward an accumulated
 // target instead. Trackpads and touch already have inertia, so they keep
 // native scrolling, as do the keyboard and scrollbar drags.
-const MIN_NOTCH_DELTA = 40;
 
 function nestedScrollerConsumes(target: EventTarget | null, delta: number) {
   let element = target instanceof Element ? target : null;
@@ -41,7 +40,11 @@ export function SmoothWheel() {
       if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
 
       const delta = wheelPixels(event);
-      if (!glide.isRunning() && Math.abs(delta) < MIN_NOTCH_DELTA) return;
+      if (Math.abs(delta) < MIN_NOTCH_DELTA) {
+        // A trackpad flick's tail: hand back to native inertia.
+        glide.stop();
+        return;
+      }
 
       const inDialog =
         event.target instanceof Element && event.target.closest("dialog");

@@ -32,8 +32,9 @@ function useHomeSection(enabled: boolean) {
       { rootMargin: "-20% 0px -75% 0px" },
     );
 
-    for (const link of NAV_LINKS) {
-      const element = document.getElementById(link.section);
+    // Reviews has no nav button, but watching it stops the highlight going stale.
+    for (const id of [...NAV_LINKS.map((link) => link.section), "reviews"]) {
+      const element = document.getElementById(id);
       if (element) observer.observe(element);
     }
     return () => observer.disconnect();

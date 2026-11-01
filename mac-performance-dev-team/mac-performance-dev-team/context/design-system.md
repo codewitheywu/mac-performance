@@ -22,6 +22,8 @@ Direction: a real performance garage, not a tech startup. The site should look l
 Do not change without explicit owner approval:
 
 - Hero: no red glow; keep the black left fade over the hero image.
+- Hero and reviews: thin slanted gold flares, approved by the project lead. They sit on black, never over a busy photo, and dim behind copy. The glow ban below still applies everywhere else.
+- Gold (`--color-gold`) is the premium accent: hairlines, links, secondary buttons and the rating.
 - Repair card: no background image.
 - CTA card: no red background.
 - Navbar: sticky.

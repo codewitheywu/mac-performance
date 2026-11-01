@@ -6,6 +6,9 @@ const SETTLED_DISTANCE = 0.5;
 const SETTLED_SPEED = 12;
 const LINE_HEIGHT = 16;
 
+// Wheel deltas below this come from a trackpad, which has its own inertia.
+export const MIN_NOTCH_DELTA = 40;
+
 export function wheelPixels(event: WheelEvent) {
   if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) {
     return event.deltaY * LINE_HEIGHT;

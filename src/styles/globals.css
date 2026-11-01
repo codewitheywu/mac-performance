@@ -235,6 +235,11 @@ dialog::backdrop {
   background-color: var(--color-spark);
 }
 
+/* Only shown where it can animate, or it would sit there as a full red line. */
+.scroll-progress {
+  display: none;
+}
+
 /* Motion ----------------------------------------------------------------- */
 
 @keyframes rise-in {
@@ -306,6 +311,7 @@ dialog::backdrop {
   @supports (animation-timeline: scroll()) {
     .scroll-progress {
       animation: scroll-progress linear both;
+      display: block;
       animation-timeline: scroll(root);
       transform-origin: left;
     }

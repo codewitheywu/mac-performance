@@ -71,5 +71,5 @@ export function OpenStatus({
     () => null,
   );
 
-  return <>{status ?? "Monday to Saturday"}</>;
+  return <>{status ?? "Open six days a week"}</>;
 }

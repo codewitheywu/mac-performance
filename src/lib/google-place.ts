@@ -7,6 +7,8 @@ import { googleSnapshot } from "@/lib/google-snapshot";
 const PLACES_API = "https://places.googleapis.com/v1";
 const CACHE_SECONDS = 60 * 60 * 12;
 const RANK_QUERY = "auto repair shop in Olongapo City";
+const REQUEST_TIMEOUT_MS = 5000;
+const PHOTO_HOST = "lh3.googleusercontent.com";
 
 export type GoogleReview = {
   author: string;
@@ -65,6 +67,7 @@ async function placesRequest<T>(
         "X-Goog-FieldMask": fieldMask,
       },
       next: { revalidate: CACHE_SECONDS, tags: ["google-place"] },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
     if (!response.ok) {
       console.error(`Places API ${path} returned ${response.status}`);
@@ -89,6 +92,13 @@ async function getSearchRank(apiKey: string, placeId: string) {
   );
   const index = result?.places?.findIndex((place) => place.id === placeId) ?? -1;
   return index === -1 ? null : { position: index + 1, query: RANK_QUERY };
+}
+
+// next/image only accepts absolute URLs on the host allowed in next.config.
+function reviewerPhoto(photoUri: string | undefined) {
+  if (!photoUri) return null;
+  const url = new URL(photoUri, `https://${PHOTO_HOST}`);
+  return url.hostname === PHOTO_HOST ? `https://${url.host}${url.pathname}` : null;
 }
 
 // Live data when the API is configured and answers, otherwise the dated copy
@@ -124,7 +134,7 @@ export const getGooglePlace = cache(async (): Promise<GooglePlace> => {
         {
           author,
           authorUrl: review.authorAttribution?.uri ?? null,
-          authorPhotoUrl: review.authorAttribution?.photoUri ?? null,
+          authorPhotoUrl: reviewerPhoto(review.authorAttribution?.photoUri),
           rating: review.rating,
           dateLabel: review.relativePublishTimeDescription ?? "",
           text,
