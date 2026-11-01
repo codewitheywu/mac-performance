@@ -16,7 +16,10 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "MAC Performance | Car Repairs, Tuning and Accessories",
+  title: {
+    default: "MAC Performance | Car Repairs, Tuning and Accessories",
+    template: "%s | MAC Performance",
+  },
   description:
     "Precision repairs, expert diagnostics and premium accessories. Everything your car needs under one roof.",
 };

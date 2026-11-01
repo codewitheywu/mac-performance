@@ -1,14 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
+import { StatsCard } from "@/components/stats-card";
 import type { Stat } from "@/lib/content";
 
-type HeroProps = {
-  bookHref: string | null;
-  servicesHref: string | null;
-  stats: Stat[];
-};
-
-export function Hero({ bookHref, servicesHref, stats }: HeroProps) {
+export function Hero({ stats }: { stats: Stat[] }) {
   return (
     <section
       aria-labelledby="hero-title"
@@ -66,41 +62,22 @@ export function Hero({ bookHref, servicesHref, stats }: HeroProps) {
           Everything your car needs under one roof.
         </p>
 
-        {bookHref || servicesHref ? (
-          <div className="mt-6 flex flex-wrap gap-3">
-            {bookHref ? (
-              <a
-                className="bg-race hover:bg-race-deep inline-flex h-12 items-center rounded-sm px-6 font-display text-xl tracking-wider transition-colors duration-200 ease-race"
-                href={bookHref}
-              >
-                Book a service
-              </a>
-            ) : null}
-            {servicesHref ? (
-              <a
-                className="inline-flex h-12 items-center rounded-sm border border-white/25 bg-white/5 px-6 font-display text-xl tracking-wider backdrop-blur-sm transition-colors duration-200 ease-race hover:border-white/60"
-                href={servicesHref}
-              >
-                Explore services
-              </a>
-            ) : null}
-          </div>
-        ) : null}
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            className="bg-race hover:bg-race-deep inline-flex h-12 items-center rounded-sm px-6 font-display text-xl tracking-wider transition-colors duration-200 ease-race"
+            href="/contacts"
+          >
+            Book a service
+          </Link>
+          <Link
+            className="inline-flex h-12 items-center rounded-sm border border-white/25 bg-white/5 px-6 font-display text-xl tracking-wider backdrop-blur-sm transition-colors duration-200 ease-race hover:border-white/60"
+            href="/services"
+          >
+            Explore services
+          </Link>
+        </div>
 
-        {stats.length > 0 ? (
-          <dl className="rise-in glass-card mt-8 grid w-full max-w-md grid-cols-3 divide-x divide-white/10">
-            {stats.map((stat) => (
-              <div className="flex flex-col-reverse justify-end gap-1 p-3 sm:p-4" key={stat.label}>
-                <dt className="text-[0.625rem] leading-snug font-semibold tracking-[0.12em] text-white/75 uppercase">
-                  {stat.label}
-                </dt>
-                <dd className="text-spark font-display text-3xl tabular-nums">
-                  {stat.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        ) : null}
+        {stats.length > 0 ? <StatsCard className="rise-in mt-8" stats={stats} /> : null}
       </div>
     </section>
   );

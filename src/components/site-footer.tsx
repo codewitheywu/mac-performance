@@ -1,14 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
-import type { NavLink } from "@/components/site-nav";
 import type { BusinessInfo } from "@/lib/content";
+import { NAV_LINKS } from "@/lib/navigation";
 
-type SiteFooterProps = {
-  links: NavLink[];
-  socials: BusinessInfo["socials"];
-};
-
-export function SiteFooter({ links, socials }: SiteFooterProps) {
+export function SiteFooter({ socials }: { socials: BusinessInfo["socials"] }) {
   return (
     <footer className="border-t border-white/10 py-8">
       <div className="shell flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
@@ -21,14 +17,14 @@ export function SiteFooter({ links, socials }: SiteFooterProps) {
         />
         <nav aria-label="Footer">
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
-            {links.map((link) => (
+            {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a
+                <Link
                   className="font-display text-lg tracking-wider text-white/80 transition-colors duration-200 ease-race hover:text-white"
                   href={link.href}
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
             {socials.map((social) => (

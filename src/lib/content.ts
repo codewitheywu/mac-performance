@@ -12,6 +12,8 @@ export type BusinessInfo = {
   phone: string | null;
   email: string | null;
   address: string | null;
+  mapsUrl: string | null;
+  mapsQuery: string | null;
   hours: { days: string; time: string }[];
   socials: { label: string; href: string }[];
 };
@@ -26,6 +28,7 @@ export type Service = {
   includes: string[];
   priceFrom: number | null;
   duration: string | null;
+  isBestSeller: boolean;
 };
 
 export type Accessory = {
@@ -48,6 +51,8 @@ export async function getBusinessInfo(): Promise<BusinessInfo> {
     phone: null,
     email: null,
     address: null,
+    mapsUrl: null,
+    mapsQuery: null,
     hours: [],
     socials: [],
   };
@@ -59,6 +64,11 @@ export async function getStats(): Promise<Stat[]> {
 
 export async function getServices(): Promise<Service[]> {
   return useSampleContent ? sampleServices : [];
+}
+
+export async function getBestSellingServices(): Promise<Service[]> {
+  const services = await getServices();
+  return services.filter((service) => service.isBestSeller);
 }
 
 export async function getAccessories(): Promise<Accessory[]> {

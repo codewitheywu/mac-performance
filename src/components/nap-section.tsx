@@ -1,3 +1,4 @@
+import { ArrowIcon } from "@/components/icons";
 import { SectionHeading } from "@/components/section-heading";
 import type { BusinessInfo } from "@/lib/content";
 import { telHref } from "@/lib/format";
@@ -6,14 +7,25 @@ type NapSectionProps = {
   address: string;
   email: BusinessInfo["email"];
   hours: BusinessInfo["hours"];
+  mapsQuery: BusinessInfo["mapsQuery"];
+  mapsUrl: BusinessInfo["mapsUrl"];
   phone: BusinessInfo["phone"];
+  showPageLink?: boolean;
 };
 
 const termClass =
   "text-[0.6875rem] font-semibold tracking-[0.18em] text-white/70 uppercase";
 
-export function NapSection({ address, email, hours, phone }: NapSectionProps) {
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+export function NapSection({
+  address,
+  email,
+  hours,
+  mapsQuery,
+  mapsUrl,
+  phone,
+  showPageLink = true,
+}: NapSectionProps) {
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(mapsQuery ?? address)}&output=embed`;
 
   return (
     <section
@@ -25,6 +37,7 @@ export function NapSection({ address, email, hours, phone }: NapSectionProps) {
         <SectionHeading
           eyebrow="Find us"
           id="contacts-title"
+          link={showPageLink ? { href: "/contacts", label: "Contact us" } : undefined}
           title="MAC Performance"
         />
 
@@ -76,6 +89,17 @@ export function NapSection({ address, email, hours, phone }: NapSectionProps) {
                 </div>
               ) : null}
             </dl>
+            {mapsUrl ? (
+              <a
+                className="mt-5 inline-flex h-11 items-center gap-2 rounded-sm border border-white/25 px-5 font-display text-lg tracking-wider transition-colors duration-200 ease-race hover:border-white/60"
+                href={mapsUrl}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Open in Google Maps
+                <ArrowIcon height="16" width="16" />
+              </a>
+            ) : null}
           </address>
 
           <div className="reveal min-h-80 overflow-hidden rounded-sm border border-white/10 lg:col-span-7">

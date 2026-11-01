@@ -1,10 +1,9 @@
-import { ArrowIcon, PhoneIcon } from "@/components/icons";
+import { BookingCard } from "@/components/booking-card";
 import { SectionHeading } from "@/components/section-heading";
 import type { Service } from "@/lib/content";
-import { formatPeso, telHref } from "@/lib/format";
+import { formatPeso } from "@/lib/format";
 
 type ServicesBentoProps = {
-  bookHref: string | null;
   phone: string | null;
   services: Service[];
 };
@@ -19,8 +18,6 @@ const CARD_SPANS: Record<number, string[]> = {
 };
 const MAX_FEATURED = 4;
 
-const cardClass = "reveal glass-card glass-lift flex flex-col p-5 sm:p-6";
-
 function ServiceCard({
   featured,
   index,
@@ -33,7 +30,7 @@ function ServiceCard({
   span: string | undefined;
 }) {
   return (
-    <li className={`${cardClass} ${span ?? ""}`}>
+    <li className={`reveal glass-card glass-lift flex flex-col p-5 sm:p-6 ${span ?? ""}`}>
       <div className="flex items-baseline justify-between gap-4 text-xs font-semibold tracking-[0.18em] uppercase">
         <span className="text-white/70">{service.category}</span>
         <span aria-hidden="true" className="text-white/50 tabular-nums">
@@ -96,7 +93,7 @@ function ServiceCard({
   );
 }
 
-export function ServicesBento({ bookHref, phone, services }: ServicesBentoProps) {
+export function ServicesBento({ phone, services }: ServicesBentoProps) {
   const featured = services.slice(0, MAX_FEATURED);
   const spans = CARD_SPANS[featured.length] ?? [];
 
@@ -111,8 +108,9 @@ export function ServicesBento({ bookHref, phone, services }: ServicesBentoProps)
         <SectionHeading
           eyebrow="What we do"
           id="services-title"
-          title="Everything your car needs."
-          titleMuted="One roof."
+          link={{ href: "/services", label: "All services" }}
+          title="Our best sellers."
+          titleMuted="Most booked."
         />
 
         <div className="mt-8 grid gap-3 lg:grid-cols-12">
@@ -128,41 +126,7 @@ export function ServicesBento({ bookHref, phone, services }: ServicesBentoProps)
             ))}
           </ul>
 
-          {bookHref || phone ? (
-            <aside
-              aria-label="Book a service"
-              className={`${cardClass} justify-between gap-5 sm:flex-row sm:items-center lg:col-span-12`}
-            >
-              <div>
-                <p className="font-display text-3xl leading-none tracking-wide uppercase">
-                  Car needs a look?
-                </p>
-                <p className="mt-2 text-sm text-white/75">
-                  Tell us the make, the model and what it is doing.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                {bookHref ? (
-                  <a
-                    className="bg-race hover:bg-race-deep inline-flex h-11 items-center gap-2 rounded-sm px-5 font-display text-lg tracking-wider transition-colors duration-200 ease-race"
-                    href={bookHref}
-                  >
-                    Book a service
-                    <ArrowIcon height="16" width="16" />
-                  </a>
-                ) : null}
-                {phone ? (
-                  <a
-                    className="inline-flex h-11 items-center gap-2 rounded-sm border border-white/25 px-5 font-display text-lg tracking-wider tabular-nums transition-colors duration-200 ease-race hover:border-white/60"
-                    href={telHref(phone)}
-                  >
-                    <PhoneIcon height="16" width="16" />
-                    {phone}
-                  </a>
-                ) : null}
-              </div>
-            </aside>
-          ) : null}
+          <BookingCard className="lg:col-span-12" phone={phone} />
         </div>
       </div>
     </section>

@@ -45,6 +45,8 @@ const nextConfig: NextConfig = {
   images: {
     // Default is WebP only; serve AVIF first where the browser supports it.
     formats: ["image/avif", "image/webp"],
+    // Reviewer profile photos returned by the Places API.
+    remotePatterns: [new URL("https://lh3.googleusercontent.com/**")],
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

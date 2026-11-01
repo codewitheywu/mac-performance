@@ -5,8 +5,8 @@ import type { Accessory, BusinessInfo, Service, Stat } from "@/lib/content";
 // SAMPLE DATA, development only. Lets the landing page be reviewed before the
 // database exists; `src/lib/content.ts` never returns it in production.
 // The address is the owner's. The phone and stats are the placeholders from
-// the design reference. Names, prices and hours are fixtures: delete this
-// file when the database is wired up.
+// the design reference. Names, prices, hours and the best-seller flags are
+// fixtures: delete this file when the database is wired up.
 
 export const sampleBusinessInfo: BusinessInfo = {
   about:
@@ -14,6 +14,8 @@ export const sampleBusinessInfo: BusinessInfo = {
   phone: "+63 911 111 1111",
   email: "sample@example.com",
   address: "131 Gordon Ave, Olongapo City, 2200 Zambales, Philippines",
+  mapsUrl: "https://maps.app.goo.gl/57vEtnDnNyx3eKk86",
+  mapsQuery: "Mac Automotive Performance, Olongapo City",
   hours: [{ days: "Sample days", time: "00:00 to 00:00" }],
   socials: [{ label: "Facebook", href: "https://example.com/sample" }],
 };
@@ -34,6 +36,7 @@ export const sampleServices: Service[] = [
     includes: ["Fault diagnosis", "Timing and cooling", "Clutch and gearbox"],
     priceFrom: 1234,
     duration: "Sample duration",
+    isBestSeller: true,
   },
   {
     slug: "sample-diagnostics",
@@ -43,6 +46,7 @@ export const sampleServices: Service[] = [
     includes: ["Full system scan", "Live data review"],
     priceFrom: 1234,
     duration: null,
+    isBestSeller: true,
   },
   {
     slug: "sample-tuning",
@@ -52,6 +56,7 @@ export const sampleServices: Service[] = [
     includes: ["Baseline check", "Custom map"],
     priceFrom: 2345,
     duration: null,
+    isBestSeller: true,
   },
   {
     slug: "sample-suspension",
@@ -61,6 +66,57 @@ export const sampleServices: Service[] = [
     includes: ["Brake inspection", "Wheel alignment"],
     priceFrom: null,
     duration: null,
+    isBestSeller: true,
+  },
+  {
+    slug: "sample-oil-service",
+    category: "Maintenance",
+    name: "Oil and filter service",
+    summary: "Sample service. Engine oil, filter and a fluid level check.",
+    includes: ["Engine oil", "Oil filter", "Fluid top-up"],
+    priceFrom: 1234,
+    duration: null,
+    isBestSeller: false,
+  },
+  {
+    slug: "sample-preventive",
+    category: "Maintenance",
+    name: "Preventive maintenance",
+    summary: "Sample service. Scheduled checks by mileage.",
+    includes: ["Belts and hoses", "Filters", "Battery test"],
+    priceFrom: 2345,
+    duration: null,
+    isBestSeller: false,
+  },
+  {
+    slug: "sample-aircon",
+    category: "Repairs",
+    name: "Aircon service",
+    summary: "Sample service. Leak check, cleaning and recharge.",
+    includes: ["Leak check", "Recharge"],
+    priceFrom: null,
+    duration: null,
+    isBestSeller: false,
+  },
+  {
+    slug: "sample-parts-fitting",
+    category: "Tuning",
+    name: "Performance parts fitting",
+    summary: "Sample service. Intakes, exhausts and suspension fitted and set up.",
+    includes: ["Fitting", "Road test"],
+    priceFrom: 3456,
+    duration: null,
+    isBestSeller: false,
+  },
+  {
+    slug: "sample-inspection",
+    category: "Diagnostics",
+    name: "Pre-purchase inspection",
+    summary: "Sample service. A full check before buying a used car.",
+    includes: ["Body and frame", "Engine scan", "Road test"],
+    priceFrom: 1234,
+    duration: null,
+    isBestSeller: false,
   },
 ];
 

@@ -1,10 +1,14 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 // Marks each `.reveal` element once it enters the viewport. The animation
-// itself lives in globals.css, on opacity and transform only.
+// itself lives in globals.css, on opacity and transform only. Keyed on the
+// path so cards on a page reached by client navigation are observed too.
 export function RevealOnScroll() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -19,10 +23,10 @@ export function RevealOnScroll() {
 
     document.documentElement.classList.add("reveal-armed");
     document
-      .querySelectorAll(".reveal")
+      .querySelectorAll(".reveal:not(.is-revealed)")
       .forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   return null;
 }

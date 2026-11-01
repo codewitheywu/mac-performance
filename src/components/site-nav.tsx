@@ -1,13 +1,13 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { CloseIcon, MenuIcon, PhoneIcon } from "@/components/icons";
-
-export type NavLink = { label: string; href: `#${string}` };
+import { NAV_LINKS } from "@/lib/navigation";
 
 type SiteNavProps = {
-  links: NavLink[];
   phone: string | null;
   phoneHref: string | null;
 };
@@ -15,47 +15,52 @@ type SiteNavProps = {
 const linkClass =
   "font-display text-lg tracking-wider transition-colors duration-200 ease-race";
 
-function useActiveSection(links: NavLink[]) {
-  const [active, setActive] = useState<string | undefined>(links[0]?.href);
+function useHomeSection(enabled: boolean) {
+  const [section, setSection] = useState(NAV_LINKS[0]?.section);
 
   useEffect(() => {
-    const sections = links.flatMap((link) => {
-      const section = document.querySelector(link.href);
-      return section ? [section] : [];
-    });
+    if (!enabled) return;
 
     // The band sits just under the navbar, so a section is active once its
     // top reaches the reading position.
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+          if (entry.isIntersecting) setSection(entry.target.id);
         }
       },
       { rootMargin: "-20% 0px -75% 0px" },
     );
 
-    sections.forEach((section) => observer.observe(section));
+    for (const link of NAV_LINKS) {
+      const element = document.getElementById(link.section);
+      if (element) observer.observe(element);
+    }
     return () => observer.disconnect();
-  }, [links]);
+  }, [enabled]);
 
-  return active;
+  return section;
 }
 
-export function SiteNav({ links, phone, phoneHref }: SiteNavProps) {
+export function SiteNav({ phone, phoneHref }: SiteNavProps) {
   const menuRef = useRef<HTMLDialogElement>(null);
-  const active = useActiveSection(links);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const homeSection = useHomeSection(isHome);
 
   return (
     <>
       <nav aria-label="Main" className="hidden lg:block">
         <ul className="flex items-center gap-8">
-          {links.map((link) => {
-            const isActive = link.href === active;
+          {NAV_LINKS.map((link) => {
+            // On the home page the highlight steps through the sections.
+            const isActive = isHome
+              ? link.section === homeSection
+              : link.href === pathname;
             return (
               <li key={link.href}>
-                <a
-                  aria-current={isActive ? "location" : undefined}
+                <Link
+                  aria-current={link.href === pathname ? "page" : undefined}
                   className={`${linkClass} block border-b-2 pt-0.5 ${
                     isActive
                       ? "border-race text-white"
@@ -64,7 +69,7 @@ export function SiteNav({ links, phone, phoneHref }: SiteNavProps) {
                   href={link.href}
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             );
           })}
@@ -110,15 +115,16 @@ export function SiteNav({ links, phone, phoneHref }: SiteNavProps) {
           </form>
 
           <ul className="mt-6 flex flex-col">
-            {links.map((link) => (
+            {NAV_LINKS.map((link) => (
               <li className="border-b border-white/10" key={link.href}>
-                <a
+                <Link
+                  aria-current={link.href === pathname ? "page" : undefined}
                   className="block py-4 font-display text-4xl tracking-wider"
                   href={link.href}
                   onClick={() => menuRef.current?.close()}
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
