@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { CloseIcon, MenuIcon, PhoneIcon } from "@/components/icons";
-import { NAV_LINKS } from "@/lib/navigation";
+import { LOGIN_LINK, NAV_LINKS, SIGNUP_LINK } from "@/lib/navigation";
 
 type SiteNavProps = {
   phone: string | null;
@@ -78,6 +78,14 @@ export function SiteNav({ phone, phoneHref }: SiteNavProps) {
       </nav>
 
       <div className="flex items-center gap-2">
+        <Link
+          aria-current={LOGIN_LINK.href === pathname ? "page" : undefined}
+          className={`${linkClass} inline-flex h-11 items-center px-2 text-white/80 hover:text-white`}
+          href={LOGIN_LINK.href}
+        >
+          {LOGIN_LINK.label}
+        </Link>
+
         {phone && phoneHref ? (
           <a
             className="border-gold/60 hover:border-gold hidden h-11 items-center gap-2 rounded-sm border px-4 font-display text-lg tracking-wider tabular-nums transition-colors duration-200 ease-race sm:inline-flex"
@@ -130,15 +138,32 @@ export function SiteNav({ phone, phoneHref }: SiteNavProps) {
             ))}
           </ul>
 
-          {phone && phoneHref ? (
-            <a
-              className="bg-race mt-auto flex h-12 items-center justify-center gap-2 rounded-sm font-display text-xl tracking-wider tabular-nums"
-              href={phoneHref}
-            >
-              <PhoneIcon height="18" width="18" />
-              {phone}
-            </a>
-          ) : null}
+          <div className="mt-auto flex flex-col gap-3 pt-6">
+            <ul className="grid grid-cols-2 gap-3">
+              {[LOGIN_LINK, SIGNUP_LINK].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    aria-current={link.href === pathname ? "page" : undefined}
+                    className="border-gold/60 flex h-12 items-center justify-center rounded-sm border font-display text-xl tracking-wider"
+                    href={link.href}
+                    onClick={() => menuRef.current?.close()}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            {phone && phoneHref ? (
+              <a
+                className="bg-race flex h-12 items-center justify-center gap-2 rounded-sm font-display text-xl tracking-wider tabular-nums"
+                href={phoneHref}
+              >
+                <PhoneIcon height="18" width="18" />
+                {phone}
+              </a>
+            ) : null}
+          </div>
         </div>
       </dialog>
     </>
