@@ -1,83 +1,101 @@
 import Image from "next/image";
-import Link from "next/link";
 
-import { StatsCard } from "@/components/stats-card";
-import type { Stat } from "@/lib/content";
+import { OpenStatus } from "@/components/open-status";
+import { RatingStars } from "@/components/rating-stars";
+import type { BusinessInfo } from "@/lib/content";
+import { telHref } from "@/lib/format";
+import type { GooglePlace } from "@/lib/google-place";
 
-export function Hero({ stats }: { stats: Stat[] }) {
+const factLabelClass = "text-xs font-medium text-white/80";
+
+export function Hero({
+  info,
+  place,
+}: {
+  info: BusinessInfo;
+  place: GooglePlace;
+}) {
   return (
     <section
       aria-labelledby="hero-title"
-      className="relative isolate flex min-h-[calc(100svh-5rem)] items-end overflow-hidden pt-56 pb-10 sm:pt-72 lg:items-center lg:py-16"
+      className="relative isolate overflow-hidden"
       id="top"
     >
-      {/* Below lg the photo is a band above the copy so the car stays in view. */}
-      <div className="absolute inset-x-0 top-0 -z-10 h-64 sm:h-96 lg:inset-0 lg:h-auto">
-        {/* object-cover zooms past the viewport width, so sizes follows the
-            rendered width (height × aspect ratio), not 100vw. */}
+      {/* The sign carries the page, so the photo stays clear of the copy. Below
+          lg it is a band on top; from lg it fills the right of the hero. */}
+      <div className="absolute inset-x-0 top-0 -z-10 h-56 sm:h-96 lg:inset-y-0 lg:right-0 lg:left-auto lg:h-auto lg:w-[62%]">
         <Image
-          alt="Yellow sports car parked in a working repair garage"
-          className="object-cover object-[66%_center] lg:object-[center_78%]"
+          alt="The shop front with its yellow MAC sign, the accessories store and the service bay"
+          className="shop-photo object-cover object-top lg:object-[34%_0%]"
           fill
           preload
-          sizes="(min-width: 1024px) max(100vw, 178svh), max(100vw, 700px)"
-          src="/images/mac-hero.png"
-        />
-        <div aria-hidden="true" className="absolute inset-0 bg-black/30" />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-t from-black via-black/10 via-40% to-transparent lg:hidden"
+          sizes="(min-width: 1024px) max(62vw, 178svh), 100vw"
+          src="/images/shop/storefront.webp"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 hidden bg-linear-to-r from-black from-22% via-black/80 via-46% to-transparent to-72% lg:block xl:via-black/85 xl:via-38% xl:to-62%"
+          className="absolute inset-0 bg-linear-to-t from-black to-transparent to-35% lg:hidden"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 hidden h-24 bg-linear-to-t from-black to-transparent lg:block"
-        />
-        <div
-          aria-hidden="true"
-          className="hero-flare flare-in inset-y-0 left-0 w-full lg:w-3/4"
+          className="absolute inset-0 hidden bg-linear-to-r from-black to-transparent to-16% lg:block"
         />
       </div>
 
-      <div className="shell">
-        <p className="inline-flex items-center gap-2 rounded-sm border border-white/15 bg-white/5 px-3 py-1.5 text-[0.6875rem] font-semibold tracking-[0.18em] uppercase backdrop-blur-sm">
-          <span aria-hidden="true" className="bg-race size-1.5" />
-          Repairs · Tuning · Accessories
-        </p>
-
-        <h1
-          className="mt-4 font-display text-[clamp(3.25rem,6.2vw,5.5rem)] leading-[0.95] tracking-wide uppercase"
-          id="hero-title"
-        >
-          <span className="block">Built for the road.</span>
-          <span className="block">Tuned for</span>
-          <span className="text-race block">Performance</span>
-        </h1>
-
-        <p className="mt-5 max-w-md text-base leading-relaxed text-white/80">
-          Precision repairs, expert diagnostics and premium accessories.
-          Everything your car needs under one roof.
-        </p>
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            className="bg-race hover:bg-race-deep inline-flex h-12 items-center rounded-sm px-6 font-display text-xl tracking-wider transition-colors duration-200 ease-race"
-            href="/contacts"
+      <div className="shell flex min-h-[calc(100svh-5rem)] flex-col justify-end gap-8 pt-52 pb-6 sm:pt-88 lg:justify-between lg:pt-24">
+        <div className="max-w-md lg:max-w-[20rem] xl:max-w-sm 2xl:max-w-md">
+          <h1
+            className="font-display text-[clamp(3.25rem,5.6vw,6rem)] leading-[0.92] tracking-wide uppercase"
+            id="hero-title"
           >
-            Book a service
-          </Link>
-          <Link
-            className="inline-flex h-12 items-center rounded-sm border border-white/25 bg-white/5 px-6 font-display text-xl tracking-wider backdrop-blur-sm transition-colors duration-200 ease-race hover:border-white/60"
-            href="/services"
-          >
-            Explore services
-          </Link>
+            Car repairs, tint, sound and parts.
+          </h1>
+          <p className="mt-4 text-base leading-relaxed text-white/85">
+            On {info.area}. Open six days a week.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              className="bg-race hover:bg-race-deep inline-flex h-12 items-center rounded-sm px-6 font-display text-xl tracking-wider tabular-nums transition-colors duration-200 ease-race"
+              href={telHref(info.phone)}
+            >
+              Call {info.phone}
+            </a>
+            <a
+              className="inline-flex h-12 items-center rounded-sm border border-gold/60 hover:border-gold px-6 font-display text-xl tracking-wider transition-colors duration-200 ease-race"
+              href={info.mapsUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Get directions
+            </a>
+          </div>
         </div>
 
-        {stats.length > 0 ? <StatsCard className="rise-in mt-8" stats={stats} /> : null}
+        <dl className="rise-in glass-card bg-black/70! grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="flex flex-col-reverse gap-1 p-4">
+            <dt className={factLabelClass}>
+              {info.hours[0]?.days}, {info.hours[0]?.time}
+            </dt>
+            <dd className="font-display text-2xl tracking-wide">
+              <OpenStatus openHours={info.openHours} />
+            </dd>
+          </div>
+          <div className="flex flex-col-reverse gap-1 p-4">
+            <dt className={factLabelClass}>
+              {place.reviewCount} Google reviews
+            </dt>
+            <dd className="text-gold flex items-center gap-2 font-display text-2xl tabular-nums">
+              {place.rating.toFixed(1)}
+              <RatingStars className="text-base" fillClass="text-gold" rating={place.rating} />
+            </dd>
+          </div>
+          <div className="flex flex-col-reverse gap-1 p-4">
+            <dt className={factLabelClass}>Service bay and accessories store</dt>
+            <dd className="font-display text-2xl tracking-wide">
+              {info.address.split(",")[0]}
+            </dd>
+          </div>
+        </dl>
       </div>
     </section>
   );

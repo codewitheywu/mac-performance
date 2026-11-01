@@ -1,24 +1,31 @@
+import Image from "next/image";
+
 type PageHeroProps = {
-  eyebrow: string;
   title: string;
-  titleMuted?: string;
   summary: string;
+  image: { src: string; alt: string; position: string };
 };
 
-export function PageHero({ eyebrow, title, titleMuted, summary }: PageHeroProps) {
+export function PageHero({ title, summary, image }: PageHeroProps) {
   return (
-    <section className="relative isolate overflow-clip border-b border-white/10 py-12 lg:py-16">
-      <div aria-hidden="true" className="speed-stripes absolute inset-y-0 -right-1/4 left-1/4 -z-10" />
-      <div className="shell">
-        <div aria-hidden="true" className="tach-scale mb-6" />
-        <p className="text-spark text-xs font-semibold tracking-[0.25em] uppercase">
-          {eyebrow}
-        </p>
-        <h1 className="mt-2 max-w-3xl font-display text-[clamp(3rem,6vw,4.75rem)] leading-[0.95] tracking-wide uppercase">
+    <section className="relative isolate flex min-h-80 items-end overflow-hidden lg:min-h-96">
+      <Image
+        alt={image.alt}
+        className={`shop-photo -z-20 object-cover ${image.position}`}
+        fill
+        preload
+        sizes="100vw"
+        src={image.src}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-linear-to-t from-black via-black/70 to-black/20"
+      />
+      <div className="shell pt-24 pb-8">
+        <h1 className="font-display text-[clamp(3.25rem,7vw,6rem)] leading-[0.92] tracking-wide uppercase">
           {title}
-          {titleMuted ? <span className="text-white/60"> {titleMuted}</span> : null}
         </h1>
-        <p className="mt-4 max-w-xl text-base leading-relaxed text-white/80">
+        <p className="mt-3 max-w-xl text-base leading-relaxed text-white/90">
           {summary}
         </p>
       </div>

@@ -17,11 +17,11 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: {
-    default: "MAC Performance | Car Repairs, Tuning and Accessories",
-    template: "%s | MAC Performance",
+    default: "MAC Automotive Performance | Car Repair and Accessories, Olongapo City",
+    template: "%s | MAC Automotive Performance",
   },
   description:
-    "Precision repairs, expert diagnostics and premium accessories. Everything your car needs under one roof.",
+    "Car repairs, window tinting, sound systems and parts on Gordon Ave, Olongapo City.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { EmptyNote } from "@/components/empty-note";
 import { NapSection } from "@/components/nap-section";
 import { PageHero } from "@/components/page-hero";
 import { getBusinessInfo } from "@/lib/content";
@@ -8,7 +7,7 @@ import { getBusinessInfo } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Contacts",
   description:
-    "Call, email or visit MAC Performance. Address, phone, opening hours and a map to the shop.",
+    "Phone numbers, opening hours, address and a map to MAC Automotive Performance.",
 };
 
 export default async function ContactsPage() {
@@ -17,25 +16,25 @@ export default async function ContactsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Contacts"
-        summary="Call ahead with the make, the model and what the car is doing, or bring it straight to the shop."
-        title="Come by"
-        titleMuted="or give us a call."
+        image={{
+          alt: "The shop front with its yellow MAC sign",
+          position: "object-[50%_12%]",
+          src: "/images/shop/storefront.webp",
+        }}
+        summary="Call first with the make and model, or come straight to the shop."
+        title="Contacts"
       />
 
-      {info.address ? (
-        <NapSection
-          address={info.address}
-          email={info.email}
-          hours={info.hours}
-          mapsQuery={info.mapsQuery}
-          mapsUrl={info.mapsUrl}
-          phone={info.phone}
-          showPageLink={false}
-        />
-      ) : (
-        <EmptyNote>Contact details are being updated.</EmptyNote>
-      )}
+      <NapSection
+        address={info.address}
+        email={info.email}
+        hours={info.hours}
+        mapsQuery={info.mapsQuery}
+        mapsUrl={info.mapsUrl}
+        mobile={info.mobile}
+        phone={info.phone}
+        showPageLink={false}
+      />
     </>
   );
 }

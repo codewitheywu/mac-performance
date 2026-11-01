@@ -15,7 +15,7 @@ export default async function PublicLayout({
     <>
       <SiteHeader phone={info.phone} />
       <main className="flex-1">{children}</main>
-      <SiteFooter socials={info.socials} />
+      <SiteFooter info={info} />
     </>
   );
 }

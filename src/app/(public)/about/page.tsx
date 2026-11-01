@@ -1,98 +1,76 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 
-import { BookingCard } from "@/components/booking-card";
-import { EmptyNote } from "@/components/empty-note";
+import { CallCard } from "@/components/booking-card";
 import { PageHero } from "@/components/page-hero";
 import { ReviewsSection } from "@/components/reviews-section";
-import { StatsCard } from "@/components/stats-card";
-import { getBusinessInfo, getServices, getStats } from "@/lib/content";
+import { getBusinessInfo } from "@/lib/content";
 import { getGooglePlace } from "@/lib/google-place";
 
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "MAC Performance is an automotive accessories and repair shop. Meet the shop behind the repairs, tuning and parts.",
+    "MAC Automotive Performance is a car repair and accessories shop with a service bay and an accessories store in one building.",
 };
 
+const GALLERY = [
+  {
+    src: "/images/shop/engine-bay.webp",
+    alt: "White Land Rover Defender in the service bay with the hood up",
+    className: "lg:col-span-7",
+    sizes: "(min-width: 1024px) 58vw, 100vw",
+  },
+  {
+    src: "/images/shop/classic-corolla.webp",
+    alt: "Orange classic Toyota Corolla parked inside the shop",
+    className: "lg:col-span-5 lg:aspect-auto",
+    sizes: "(min-width: 1024px) 42vw, 100vw",
+  },
+];
+
 export default async function AboutPage() {
-  const [info, stats, services, place] = await Promise.all([
-    getBusinessInfo(),
-    getStats(),
-    getServices(),
-    getGooglePlace(),
-  ]);
-  const categories = [...new Set(services.map((service) => service.category))];
+  const [info, place] = await Promise.all([getBusinessInfo(), getGooglePlace()]);
 
   return (
     <>
       <PageHero
-        eyebrow="About us"
-        summary="An automotive accessories and repair shop. Repairs, tuning and parts are handled in one place."
-        title="A repair bay and a parts counter."
-        titleMuted="Same shop."
+        image={{
+          alt: "The shop front with its yellow MAC sign",
+          position: "object-[50%_12%]",
+          src: "/images/shop/storefront.webp",
+        }}
+        summary="A service bay and an accessories store in one building."
+        title="About us"
       />
 
-      {info.about ? (
-        <section aria-label="The shop" className="py-14 lg:py-20">
-          <div className="shell grid gap-6 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-5">
-              <p className="reveal text-base leading-relaxed text-white/80">
-                {info.about}
-              </p>
-              {stats.length > 0 ? (
-                <StatsCard className="reveal mt-6" stats={stats} />
-              ) : null}
-            </div>
-            <div className="reveal relative aspect-4/3 overflow-hidden rounded-sm border border-white/10 lg:col-span-7">
-              <Image
-                alt="Mechanic working at a bench in the repair garage"
-                className="object-cover object-[0%_62%]"
-                fill
-                preload
-                sizes="(min-width: 1024px) 60vw, 100vw"
-                src="/images/mac-hero.png"
-              />
-            </div>
+      <section aria-label="The shop" className="py-20 lg:py-28">
+        <div className="shell">
+          <p className="reveal max-w-3xl text-xl leading-relaxed font-light text-white/90 lg:text-2xl">
+            {info.about}
+          </p>
+          <div className="mt-10 grid gap-3 lg:grid-cols-12">
+            {GALLERY.map((photo) => (
+              <div
+                className={`reveal relative aspect-16/10 overflow-hidden rounded-sm ${photo.className}`}
+                key={photo.src}
+              >
+                <Image
+                  alt={photo.alt}
+                  className="shop-photo object-cover"
+                  fill
+                  sizes={photo.sizes}
+                  src={photo.src}
+                />
+              </div>
+            ))}
           </div>
-        </section>
-      ) : (
-        <EmptyNote>The shop profile is being updated.</EmptyNote>
-      )}
-
-      {categories.length > 0 ? (
-        <section
-          aria-labelledby="coverage-title"
-          className="border-t border-white/10 py-14 lg:py-20"
-        >
-          <div className="shell">
-            <h2
-              className="reveal font-display text-[clamp(2.25rem,4.5vw,3.5rem)] leading-none tracking-wide uppercase"
-              id="coverage-title"
-            >
-              What the shop covers
-            </h2>
-            <ul className="mt-6 flex flex-wrap gap-3">
-              {categories.map((category) => (
-                <li className="reveal" key={category}>
-                  <Link
-                    className="glass-card glass-lift inline-flex h-11 items-center px-5 font-display text-lg tracking-wider"
-                    href="/services"
-                  >
-                    {category}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
 
       <ReviewsSection place={place} />
 
-      <div className="shell pb-14 lg:pb-20">
-        <BookingCard className="" phone={info.phone} />
+      <div className="shell py-14 lg:py-20">
+        <CallCard mobile={info.mobile} phone={info.phone} />
       </div>
     </>
   );

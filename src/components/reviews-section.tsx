@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { ArrowIcon } from "@/components/icons";
 import { RatingStars } from "@/components/rating-stars";
 import type { GooglePlace, GoogleReview } from "@/lib/google-place";
 
@@ -119,13 +118,12 @@ export function ReviewsSection({ place }: { place: GooglePlace }) {
           ) : null}
 
           <a
-            className="border-gold/60 hover:border-gold mt-8 inline-flex h-12 items-center gap-3 rounded-sm border px-6 font-display text-lg tracking-widest transition-colors duration-200 ease-race"
+            className="border-gold/60 hover:border-gold mt-8 inline-flex h-12 items-center rounded-sm border px-6 font-display text-lg tracking-widest transition-colors duration-200 ease-race"
             href={place.mapsUrl}
             rel="noopener noreferrer"
             target="_blank"
           >
             Read all reviews on Google
-            <ArrowIcon height="16" width="16" />
           </a>
         </div>
 

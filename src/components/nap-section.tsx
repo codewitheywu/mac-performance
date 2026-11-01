@@ -1,4 +1,3 @@
-import { ArrowIcon } from "@/components/icons";
 import { SectionHeading } from "@/components/section-heading";
 import type { BusinessInfo } from "@/lib/content";
 import { telHref } from "@/lib/format";
@@ -9,6 +8,7 @@ type NapSectionProps = {
   hours: BusinessInfo["hours"];
   mapsQuery: BusinessInfo["mapsQuery"];
   mapsUrl: BusinessInfo["mapsUrl"];
+  mobile: BusinessInfo["mobile"];
   phone: BusinessInfo["phone"];
   showPageLink?: boolean;
 };
@@ -22,6 +22,7 @@ export function NapSection({
   hours,
   mapsQuery,
   mapsUrl,
+  mobile,
   phone,
   showPageLink = true,
 }: NapSectionProps) {
@@ -30,15 +31,14 @@ export function NapSection({
   return (
     <section
       aria-labelledby="contacts-title"
-      className="border-t border-white/10 py-14 lg:py-20"
+      className="py-20 lg:py-28"
       id="contacts"
     >
       <div className="shell">
         <SectionHeading
-          eyebrow="Find us"
           id="contacts-title"
-          link={showPageLink ? { href: "/contacts", label: "Contact us" } : undefined}
-          title="MAC Performance"
+          link={showPageLink ? { href: "/contacts", label: "All contact details" } : undefined}
+          title="Find us"
         />
 
         <div className="mt-8 grid gap-3 lg:grid-cols-12">
@@ -58,6 +58,14 @@ export function NapSection({
                     >
                       {phone}
                     </a>
+                    {mobile ? (
+                      <a
+                        className="hover:text-spark block font-display text-2xl tracking-wide tabular-nums transition-colors duration-200 ease-race"
+                        href={telHref(mobile)}
+                      >
+                        {mobile}
+                      </a>
+                    ) : null}
                   </dd>
                 </div>
               ) : null}
@@ -79,11 +87,11 @@ export function NapSection({
                   <dt className={termClass}>Hours</dt>
                   {hours.map((entry) => (
                     <dd
-                      className="mt-1 flex justify-between gap-4 text-sm tabular-nums"
+                      className="mt-1 flex justify-between gap-4 text-sm"
                       key={entry.days}
                     >
                       <span>{entry.days}</span>
-                      <span className="text-spark">{entry.time}</span>
+                      <span>{entry.time}</span>
                     </dd>
                   ))}
                 </div>
@@ -91,13 +99,12 @@ export function NapSection({
             </dl>
             {mapsUrl ? (
               <a
-                className="mt-5 inline-flex h-11 items-center gap-2 rounded-sm border border-white/25 px-5 font-display text-lg tracking-wider transition-colors duration-200 ease-race hover:border-white/60"
+                className="mt-5 inline-flex h-11 items-center gap-2 rounded-sm border border-gold/60 hover:border-gold px-5 font-display text-lg tracking-wider transition-colors duration-200 ease-race"
                 href={mapsUrl}
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 Open in Google Maps
-                <ArrowIcon height="16" width="16" />
               </a>
             ) : null}
           </address>

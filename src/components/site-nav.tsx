@@ -79,7 +79,7 @@ export function SiteNav({ phone, phoneHref }: SiteNavProps) {
       <div className="flex items-center gap-2">
         {phone && phoneHref ? (
           <a
-            className="bg-race hover:bg-race-deep hidden h-11 items-center gap-2 rounded-sm px-4 font-display text-lg tracking-wider tabular-nums transition-colors duration-200 ease-race sm:inline-flex"
+            className="border-gold/60 hover:border-gold hidden h-11 items-center gap-2 rounded-sm border px-4 font-display text-lg tracking-wider tabular-nums transition-colors duration-200 ease-race sm:inline-flex"
             href={phoneHref}
           >
             <PhoneIcon height="16" width="16" />

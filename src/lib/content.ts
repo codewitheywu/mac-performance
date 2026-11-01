@@ -1,76 +1,48 @@
 import "server-only";
 
-import {
-  sampleAccessories,
-  sampleBusinessInfo,
-  sampleServices,
-  sampleStats,
-} from "@/lib/sample-content";
+import { shopAccessories, shopInfo, shopServices } from "@/lib/shop-data";
 
 export type BusinessInfo = {
-  about: string | null;
-  phone: string | null;
+  about: string;
+  phone: string;
+  mobile: string | null;
   email: string | null;
-  address: string | null;
-  mapsUrl: string | null;
+  address: string;
+  area: string;
+  mapsUrl: string;
   mapsQuery: string | null;
   hours: { days: string; time: string }[];
+  openHours: ([number, number] | null)[];
   socials: { label: string; href: string }[];
 };
 
-export type Stat = { value: string; label: string };
-
 export type Service = {
   slug: string;
-  category: string;
   name: string;
-  summary: string;
-  includes: string[];
-  priceFrom: number | null;
-  duration: string | null;
-  isBestSeller: boolean;
+  // Shown on the home page. The owner picks the best sellers.
+  isFeatured: boolean;
 };
 
 export type Accessory = {
   slug: string;
-  category: string;
   name: string;
-  priceFrom: number | null;
+  image: { src: string; alt: string } | null;
 };
 
-// The single boundary between the UI and business data. Every field is
-// nullable or a list so sections hide themselves when the data is absent.
-// Replace these bodies with database queries; production stays empty until
-// then so sample values can never ship.
-const useSampleContent = process.env.NODE_ENV !== "production";
-
+// The single boundary between the UI and business data. Replace these bodies
+// with database queries when the CMS exists.
 export async function getBusinessInfo(): Promise<BusinessInfo> {
-  if (useSampleContent) return sampleBusinessInfo;
-  return {
-    about: null,
-    phone: null,
-    email: null,
-    address: null,
-    mapsUrl: null,
-    mapsQuery: null,
-    hours: [],
-    socials: [],
-  };
-}
-
-export async function getStats(): Promise<Stat[]> {
-  return useSampleContent ? sampleStats : [];
+  return shopInfo;
 }
 
 export async function getServices(): Promise<Service[]> {
-  return useSampleContent ? sampleServices : [];
+  return shopServices;
 }
 
-export async function getBestSellingServices(): Promise<Service[]> {
-  const services = await getServices();
-  return services.filter((service) => service.isBestSeller);
+export async function getFeaturedServices(): Promise<Service[]> {
+  return shopServices.filter((service) => service.isFeatured);
 }
 
 export async function getAccessories(): Promise<Accessory[]> {
-  return useSampleContent ? sampleAccessories : [];
+  return shopAccessories;
 }

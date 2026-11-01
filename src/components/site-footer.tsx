@@ -2,35 +2,71 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { BusinessInfo } from "@/lib/content";
+import { telHref } from "@/lib/format";
 import { NAV_LINKS } from "@/lib/navigation";
 
-export function SiteFooter({ socials }: { socials: BusinessInfo["socials"] }) {
+const headingClass = "text-gold text-xs font-semibold tracking-[0.2em] uppercase";
+
+export function SiteFooter({ info }: { info: BusinessInfo }) {
   return (
-    <footer className="border-t border-white/10 py-8">
-      <div className="shell flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <Image
-          alt="MAC Performance"
-          className="shrink-0"
-          height={36}
-          src="/images/MAC.png"
-          width={95}
-        />
+    <footer className="border-gold/25 border-t py-12">
+      <div className="shell grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <Image
+            alt="MAC Performance"
+            className="shrink-0"
+            height={36}
+            src="/images/MAC.png"
+            width={95}
+          />
+          <p className="mt-3 max-w-56 text-sm leading-relaxed text-white/80">
+            {info.address}
+          </p>
+        </div>
+
+        <div>
+          <p className={headingClass}>Hours</p>
+          <ul className="mt-2 space-y-1 text-sm">
+            {info.hours.map((entry) => (
+              <li key={entry.days}>
+                {entry.days}: {entry.time}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className={headingClass}>Call</p>
+          <ul className="mt-2 space-y-1 text-sm tabular-nums">
+            <li>
+              <a className="hover:underline" href={telHref(info.phone)}>
+                {info.phone}
+              </a>
+            </li>
+            {info.mobile ? (
+              <li>
+                <a className="hover:underline" href={telHref(info.mobile)}>
+                  {info.mobile}
+                </a>
+              </li>
+            ) : null}
+          </ul>
+        </div>
+
         <nav aria-label="Footer">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+          <p className={headingClass}>Pages</p>
+          <ul className="mt-2 space-y-1 text-sm">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <Link
-                  className="font-display text-lg tracking-wider text-white/80 transition-colors duration-200 ease-race hover:text-white"
-                  href={link.href}
-                >
+                <Link className="hover:underline" href={link.href}>
                   {link.label}
                 </Link>
               </li>
             ))}
-            {socials.map((social) => (
+            {info.socials.map((social) => (
               <li key={social.href}>
                 <a
-                  className="text-spark font-display text-lg tracking-wider transition-colors duration-200 ease-race hover:text-white"
+                  className="hover:underline"
                   href={social.href}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -41,9 +77,6 @@ export function SiteFooter({ socials }: { socials: BusinessInfo["socials"] }) {
             ))}
           </ul>
         </nav>
-        <p className="text-xs text-white/70">
-          © {new Date().getFullYear()} MAC Performance
-        </p>
       </div>
     </footer>
   );
