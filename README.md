@@ -12,7 +12,7 @@ The content is real. The phone numbers, hours, services, accessories, photos and
 - `/accessories`
 - `/contacts`
 - `/login` and `/signup`, which save and send nothing, because accounts need a database. Log in goes straight in with no password
-- `/appointments`, the customer area, where sample bookings stay in that browser
+- `/appointments`, the customer area: bookings, plus an accessories shop list that can be fitted on a visit. Both stay in that browser
 
 ## Run it
 

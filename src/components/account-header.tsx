@@ -13,7 +13,7 @@ export function AccountHeader() {
       <div className="shell">
         <div className="glass-card pointer-events-auto flex h-18 items-center justify-between gap-4 px-3 [--glass-tint:0.72] sm:px-5">
           <Link
-            aria-label="Your appointments"
+            aria-label="Appointments and shop"
             className="shrink-0"
             href={APPOINTMENTS_LINK.href}
           >
@@ -22,6 +22,16 @@ export function AccountHeader() {
           <nav aria-label="Account">
             <ul className="flex items-center gap-1 sm:gap-4">
               <li className="hidden sm:block">
+                <Link className={linkClass} href={`${APPOINTMENTS_LINK.href}#appointments`}>
+                  {APPOINTMENTS_LINK.label}
+                </Link>
+              </li>
+              <li>
+                <Link className={linkClass} href={`${APPOINTMENTS_LINK.href}#shop`}>
+                  Shop
+                </Link>
+              </li>
+              <li className="hidden md:block">
                 <Link className={linkClass} href="/">
                   Main site
                 </Link>

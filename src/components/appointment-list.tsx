@@ -44,14 +44,14 @@ export function AppointmentList() {
       className="reveal glass-card p-6 sm:p-8"
     >
       <p className="eyebrow">Upcoming</p>
-      <h2
+      <h3
         className="mt-2 font-display text-4xl leading-none tracking-wide uppercase"
         id="upcoming-title"
         ref={headingRef}
         tabIndex={-1}
       >
         Your visits
-      </h2>
+      </h3>
 
       {upcoming.length > 0 ? (
         <ul className="mt-5 border-t border-white/15">
@@ -65,6 +65,11 @@ export function AppointmentList() {
                   {item.serviceName}
                 </p>
                 <p className="text-sm wrap-anywhere text-white/90">{item.car}</p>
+                {item.extras?.length ? (
+                  <p className="text-sm text-white/90">
+                    Fitting {item.extras.join(", ")}
+                  </p>
+                ) : null}
                 <p className="text-gold text-sm font-medium tabular-nums">
                   {visitLabel(item)}
                 </p>

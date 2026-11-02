@@ -1,20 +1,27 @@
 import type { Metadata } from "next";
 
+import { AccessoryCard } from "@/components/accessory-card";
 import { AppointmentList } from "@/components/appointment-list";
 import { BookingPanel } from "@/components/booking-panel";
 import { Flares } from "@/components/flares";
-import { OpenStatus } from "@/components/open-status";
 import { PageHero } from "@/components/page-hero";
-import { getBusinessInfo, getServices } from "@/lib/content";
-import { telHref } from "@/lib/format";
+import { SectionHeading } from "@/components/section-heading";
+import { ShopList } from "@/components/shop-list";
+import { ShopToggle } from "@/components/shop-toggle";
+import { getAccessories, getBusinessInfo, getServices } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Your appointments",
-  description: "Book a visit to MAC Automotive Performance.",
+  title: "Appointments and shop",
+  description: "Book a visit and pick accessories at MAC Automotive Performance.",
 };
 
 export default async function AppointmentsPage() {
-  const [info, services] = await Promise.all([getBusinessInfo(), getServices()]);
+  const [info, services, accessories] = await Promise.all([
+    getBusinessInfo(),
+    getServices(),
+    getAccessories(),
+  ]);
+  const catalog = accessories.map(({ name, slug }) => ({ name, slug }));
 
   return (
     <>
@@ -24,54 +31,66 @@ export default async function AppointmentsPage() {
           position: "object-[50%_45%]",
           src: "/images/shop/engine-bay.webp",
         }}
-        summary="See what is coming up, or book your car in."
-        title="Your appointments"
+        summary="Book your car in, and pick accessories to collect or have fitted on the same visit."
+        title="Book and shop"
       />
 
-      <div className="relative isolate overflow-clip">
+      <section
+        aria-labelledby="appointments-title"
+        className="relative isolate overflow-clip"
+        id="appointments"
+      >
         <Flares lines />
-        <div className="shell grid grid-cols-1 gap-4 py-14 lg:grid-cols-12 lg:items-start lg:py-20">
-          <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-24 lg:col-span-5">
-            <AppointmentList />
-
-            <section
-              aria-labelledby="visit-title"
-              className="reveal glass-card p-6 sm:p-8"
-            >
-              <p className="eyebrow">The shop</p>
-              <h2
-                className="mt-2 font-display text-3xl leading-none tracking-wide uppercase"
-                id="visit-title"
-              >
-                <OpenStatus openHours={info.openHours} />
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-white/90">
-                {info.address}
-              </p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <a className="btn btn-race tabular-nums" href={telHref(info.phone)}>
-                  Call {info.phone}
-                </a>
-                <a
-                  className="btn btn-glass"
-                  href={info.mapsUrl}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Get directions
-                </a>
-              </div>
-            </section>
-          </div>
-
-          <div className="min-w-0 lg:col-span-7">
-            <BookingPanel
-              openHours={info.openHours}
-              services={services.map(({ name, slug }) => ({ name, slug }))}
-            />
+        <div className="shell py-14 lg:py-20">
+          <SectionHeading id="appointments-title" title="Appointments" />
+          <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start">
+            <div className="min-w-0 lg:sticky lg:top-24 lg:col-span-5">
+              <AppointmentList />
+            </div>
+            <div className="min-w-0 lg:col-span-7">
+              <BookingPanel
+                accessories={catalog}
+                openHours={info.openHours}
+                services={services.map(({ name, slug }) => ({ name, slug }))}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      <section
+        aria-labelledby="shop-title"
+        className="relative isolate overflow-clip"
+        id="shop"
+      >
+        <Flares flip lines />
+        <div className="shell py-14 lg:py-20">
+          <SectionHeading id="shop-title" title="Accessories shop" />
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/90">
+            Add what you want from the store. Collect it on your visit, or have
+            it fitted in the service bay.
+          </p>
+          <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start">
+            <ul
+              aria-label="Accessories"
+              className="grid min-w-0 gap-4 sm:grid-cols-2 lg:col-span-8"
+            >
+              {accessories.map((accessory) => (
+                <AccessoryCard
+                  accessory={accessory}
+                  action={<ShopToggle name={accessory.name} slug={accessory.slug} />}
+                  className="aspect-4/3"
+                  key={accessory.slug}
+                  sizes="(min-width: 1024px) 31vw, (min-width: 640px) 50vw, 100vw"
+                />
+              ))}
+            </ul>
+            <div className="min-w-0 lg:sticky lg:top-24 lg:col-span-4">
+              <ShopList accessories={catalog} />
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

@@ -11,10 +11,12 @@ import {
   slotId,
   validateBooking,
 } from "@/lib/appointment-rules";
-import type { BusinessInfo, Service } from "@/lib/content";
+import type { Accessory, BusinessInfo, Service } from "@/lib/content";
 import { hourLabel, useManilaNow } from "@/lib/manila-time";
+import { clearShopList, useShopList } from "@/lib/shop-list-store";
 
 type BookingPanelProps = {
+  accessories: Pick<Accessory, "name" | "slug">[];
   openHours: BusinessInfo["openHours"];
   services: Pick<Service, "name" | "slug">[];
 };
@@ -32,14 +34,20 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-export function BookingPanel({ openHours, services }: BookingPanelProps) {
+export function BookingPanel({
+  accessories,
+  openHours,
+  services,
+}: BookingPanelProps) {
   const now = useManilaNow();
   const appointments = useAppointments();
+  const shopList = useShopList();
 
   const [service, setService] = useState("");
   const [car, setCar] = useState("");
   const [pickedDate, setPickedDate] = useState("");
   const [pickedHour, setPickedHour] = useState<number | null>(null);
+  const [isFitting, setIsFitting] = useState(false);
   const [errors, setErrors] = useState<BookingErrors>({});
   const [booked, setBooked] = useState({ id: "", message: "" });
 
@@ -51,6 +59,9 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
   const hour = pickedDate === date ? pickedHour : null;
   const slots = now && date ? openSlots(openHours, date, now) : [];
   const takenSlots = appointments.map((item) => item.id);
+  const listNames = accessories
+    .filter((item) => shopList.includes(item.slug))
+    .map((item) => item.name);
 
   const book = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -77,30 +88,36 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
     const bookedHour = hour as number;
     const id = slotId(date, bookedHour);
     const serviceName = services.find((item) => item.slug === service)?.name ?? "";
-    addAppointment({ car: car.trim(), date, hour: bookedHour, id, serviceName });
+    // The list moves onto the visit, so it is not fitted twice.
+    const extras = isFitting && listNames.length > 0 ? listNames : undefined;
+    addAppointment({ car: car.trim(), date, extras, hour: bookedHour, id, serviceName });
+    if (extras) clearShopList();
 
     const { day, weekday } = dateLabel(date);
+    const fitting = extras ? `, fitting ${extras.join(", ")}` : "";
     setBooked({
       id,
-      message: `${serviceName} saved for ${weekday}, ${day} at ${hourLabel(bookedHour)}.`,
+      message: `${serviceName} saved for ${weekday}, ${day} at ${hourLabel(bookedHour)}${fitting}.`,
     });
     setService("");
     setCar("");
     setPickedHour(null);
+    setIsFitting(false);
   };
 
   return (
     <section
       aria-labelledby="book-title"
       className="reveal glass-card p-6 sm:p-8 lg:p-10"
+      id="book"
     >
-      <span aria-hidden="true" className="slant-tick mb-3" />
-      <h2
-        className="font-display text-[clamp(2.75rem,5.6vw,4.75rem)] leading-none tracking-wide uppercase"
+      <p className="eyebrow">New booking</p>
+      <h3
+        className="mt-2 font-display text-4xl leading-none tracking-wide uppercase"
         id="book-title"
       >
         Book a visit
-      </h2>
+      </h3>
       <p className="border-gold mt-4 border-l-2 pl-3 text-sm leading-relaxed text-white/85">
         Sample booking. It stays on this device and does not reach the shop.
       </p>
@@ -219,6 +236,21 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
           )}
           <FieldError id="slot-error" message={errors.slot} />
         </fieldset>
+
+        {listNames.length > 0 ? (
+          <label className="has-checked:border-gold has-focus-visible:outline-spark flex min-h-12 cursor-pointer items-start gap-3 rounded-sm border border-white/30 bg-black/45 p-3 has-focus-visible:outline-2 has-focus-visible:outline-offset-2">
+            <input
+              checked={isFitting}
+              className="accent-gold mt-0.5 size-5 shrink-0"
+              onChange={(event) => setIsFitting(event.target.checked)}
+              type="checkbox"
+            />
+            <span className="text-sm leading-relaxed">
+              <span className="font-medium">Fit my shop list on this visit</span>
+              <span className="block text-white/85">{listNames.join(", ")}</span>
+            </span>
+          </label>
+        ) : null}
 
         <button className="btn btn-race" disabled={!now} type="submit">
           Book this visit
