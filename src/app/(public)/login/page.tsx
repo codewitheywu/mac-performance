@@ -14,7 +14,7 @@ export default async function LoginPage() {
 
   return (
     <AuthPage
-      image="/images/shop/engine-bay.webp"
+      image="/images/shop/storefront.webp"
       mode="login"
       phone={info.phone}
       summary="See your bookings and orders, and message the shop."
