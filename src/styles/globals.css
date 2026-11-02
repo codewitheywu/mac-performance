@@ -6,6 +6,9 @@
   --color-race-deep: #b8040f;
   --color-spark: #ffb000;
   --color-gold: #d8b56d;
+  --color-gold-pale: #fff6e0;
+
+  --radius-glass: 0.625rem;
 
   --ease-race: cubic-bezier(0.2, 0.8, 0.2, 1);
 
@@ -23,6 +26,17 @@
   --lift-timing: 200ms var(--ease-race);
   --rise-timing: 560ms var(--ease-race);
   --rise-distance: 2.5rem;
+
+  --glass-blur: 22px;
+  /* Fine frost, so large glass reads as a material and not a flat tint. */
+  --glass-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Phones repaint every blurred layer on scroll, so they get a lighter blur. */
+@media (max-width: 1023px) {
+  :root {
+    --glass-blur: 14px;
+  }
 }
 
 html {
@@ -70,27 +84,76 @@ dialog::backdrop {
   }
 }
 
-/* One elevation style for every card on the site. The blur only shows over
-   photos, so it earns its cost in the hero strip and on photo tiles. */
+/* One glass for the whole site. Always placed over a photo or a light beam,
+   because blur over flat black shows nothing. The dark base keeps text readable
+   over a bright photo, and the pseudo-element draws a lit gold edge that a plain
+   border cannot. */
 @utility glass-card {
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
-  backdrop-filter: blur(10px) saturate(140%);
-  background-color: rgb(255 255 255 / 0.05);
-  border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: var(--radius-sm);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+  background:
+    var(--glass-grain),
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.11),
+      rgb(255 255 255 / 0.03) 40%,
+      --alpha(var(--color-gold) / 6%)
+    ),
+    rgb(6 6 7 / var(--glass-tint, 0.62));
+  border-radius: var(--radius-glass);
+  box-shadow:
+    0 30px 60px -30px rgb(0 0 0 / 0.95),
+    inset 0 1px 0 rgb(255 255 255 / 0.14);
+  overflow: clip;
+  position: relative;
+
+  &::before {
+    background: linear-gradient(
+      135deg,
+      --alpha(var(--color-gold-pale) / 60%),
+      rgb(255 255 255 / 0.1) 28%,
+      rgb(255 255 255 / 0.05) 62%,
+      --alpha(var(--color-gold) / 45%)
+    );
+    border-radius: inherit;
+    content: "";
+    inset: 0;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    padding: 1px;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+  }
+}
+
+/* A band of light that crosses the glass on hover, on the flare angle. */
+@utility glass-sheen {
+  &::after {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      --alpha(var(--color-gold-pale) / 16%),
+      transparent
+    );
+    content: "";
+    inset-block: -10%;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    transform: skewX(-22deg);
+    translate: -120% 0;
+    width: 34%;
+    z-index: 1;
+  }
 }
 
 /* `translate`, not `transform`, so the hover lift never fights the reveal. */
 @utility glass-lift {
-  transition:
-    translate var(--lift-timing),
-    border-color var(--lift-timing),
-    background-color var(--lift-timing);
+  transition: translate var(--lift-timing);
 
   @variant hover {
-    background-color: rgb(255 255 255 / 0.08);
-    border-color: rgb(255 255 255 / 0.28);
     translate: 0 -0.25rem;
   }
 
@@ -101,10 +164,129 @@ dialog::backdrop {
   }
 }
 
+@utility btn {
+  align-items: center;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  gap: 0.5rem;
+  height: 3rem;
+  justify-content: center;
+  letter-spacing: var(--tracking-wider);
+  padding-inline: 1.5rem;
+  transition:
+    background-color var(--lift-timing),
+    border-color var(--lift-timing);
+}
+
+/* A machined face, not a flat fill. Red never glows, so the shadow stays black. */
+@utility btn-race {
+  background-color: var(--color-race);
+  background-image: linear-gradient(180deg, transparent 40%, rgb(0 0 0 / 0.2));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.32),
+    0 12px 24px -14px rgb(0 0 0 / 0.9);
+
+  @variant hover {
+    background-color: var(--color-race-deep);
+  }
+}
+
+@utility btn-glass {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  background-color: rgb(0 0 0 / 0.35);
+  border: 1px solid --alpha(var(--color-gold) / 60%);
+
+  @variant hover {
+    background-color: rgb(0 0 0 / 0.55);
+    border-color: var(--color-gold);
+  }
+}
+
+/* Small gold label over a heading. */
+@utility eyebrow {
+  color: var(--color-gold);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
 /* Phone photos run bright and saturated. This calms them so the whole set
    reads as one graded series on black. */
 @utility shop-photo {
-  filter: brightness(0.9) contrast(1.05) saturate(0.85);
+  filter: brightness(0.88) contrast(1.08) saturate(0.82);
+}
+
+/* Soft shafts of light, like headlights through haze. Wide and low in contrast,
+   so unlike the thin lines of hero-flare they can cross a photo without reading
+   as scratches. */
+@utility beam-flare {
+  background:
+    linear-gradient(
+      112deg,
+      transparent 14%,
+      --alpha(var(--color-gold-pale) / 13%) 21%,
+      transparent 28%
+    ),
+    linear-gradient(
+      112deg,
+      transparent 40%,
+      --alpha(var(--color-gold-pale) / 9%) 45%,
+      transparent 51%
+    ),
+    linear-gradient(
+      112deg,
+      transparent 64%,
+      --alpha(var(--color-gold) / 12%) 69%,
+      transparent 75%
+    );
+  mix-blend-mode: screen;
+  pointer-events: none;
+  position: absolute;
+}
+
+/* A long slanted streak with a soft elongated halo. Never a round core: a round
+   flare reads as an eye. */
+@utility flare-streak {
+  background:
+    linear-gradient(
+        90deg,
+        transparent 8%,
+        --alpha(var(--color-gold) / 50%) 42%,
+        var(--color-gold-pale) 50%,
+        --alpha(var(--color-gold) / 50%) 58%,
+        transparent 92%
+      )
+      center / 100% 1px no-repeat,
+    radial-gradient(
+      ellipse 50% 50%,
+      --alpha(var(--color-gold) / 24%),
+      transparent 72%
+    );
+  height: 7rem;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  position: absolute;
+  rotate: -22deg;
+  width: 62rem;
+}
+
+/* Lets the light die out at the top and bottom, so sections meet without a
+   hard line. */
+@utility flare-fade {
+  mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+}
+
+/* The one graphic motif: a stroke on the angle of the flares. */
+@utility slant-tick {
+  background: var(--color-gold);
+  display: block;
+  height: 0.875rem;
+  transform: skewX(-22deg);
+  width: 2.5rem;
 }
 
 /* Slanted light beams, in the gold of the reviews section. Never red: the hero
@@ -267,6 +449,22 @@ dialog::backdrop {
   }
 }
 
+@keyframes sheen-pass {
+  to {
+    translate: 420% 0;
+  }
+}
+
+@keyframes photo-drift {
+  from {
+    transform: scale(1.1) translateY(-3.5%);
+  }
+
+  to {
+    transform: scale(1.1) translateY(3.5%);
+  }
+}
+
 @keyframes scroll-progress {
   from {
     transform: scaleX(0);
@@ -312,6 +510,30 @@ dialog::backdrop {
 
   .flare-in {
     animation: flare-in 1200ms var(--ease-race) both;
+  }
+
+  /* Headlights coming on: one pass of light over the glass as the page opens. */
+  .sheen-in::after {
+    animation: sheen-pass 1500ms 500ms var(--ease-race) both;
+  }
+
+  @media (hover: hover) {
+    .glass-sheen::after {
+      transition: translate 900ms var(--ease-race);
+    }
+
+    .glass-sheen:hover::after {
+      translate: 420% 0;
+    }
+  }
+
+  /* Photos drift a little against the page. Runs off the main thread, and
+     browsers without view timelines simply show a still photo. */
+  @supports (animation-timeline: view()) {
+    .photo-drift {
+      animation: photo-drift linear both;
+      animation-timeline: view();
+    }
   }
 
   .rise-in {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 
 import { CallCard } from "@/components/booking-card";
+import { Flares } from "@/components/flares";
 import { PageHero } from "@/components/page-hero";
 import { ReviewsSection } from "@/components/reviews-section";
 import { getBusinessInfo } from "@/lib/content";
@@ -44,20 +45,24 @@ export default async function AboutPage() {
         title="About us"
       />
 
-      <section aria-label="The shop" className="py-20 lg:py-28">
+      <section
+        aria-label="The shop"
+        className="relative isolate overflow-clip py-20 lg:py-28"
+      >
+        <Flares lines />
         <div className="shell">
-          <p className="reveal max-w-3xl text-xl leading-relaxed font-light text-white/90 lg:text-2xl">
+          <p className="reveal glass-card p-6 text-xl leading-relaxed font-light text-white/90 sm:p-8 lg:p-12 lg:text-2xl">
             {info.about}
           </p>
-          <div className="mt-10 grid gap-3 lg:grid-cols-12">
+          <div className="mt-4 grid gap-4 lg:grid-cols-12">
             {GALLERY.map((photo) => (
               <div
-                className={`reveal relative aspect-16/10 overflow-hidden rounded-sm ${photo.className}`}
+                className={`reveal rounded-glass relative aspect-16/10 overflow-clip ${photo.className}`}
                 key={photo.src}
               >
                 <Image
                   alt={photo.alt}
-                  className="shop-photo object-cover"
+                  className="shop-photo photo-drift object-cover"
                   fill
                   sizes={photo.sizes}
                   src={photo.src}
@@ -70,8 +75,11 @@ export default async function AboutPage() {
 
       <ReviewsSection place={place} />
 
-      <div className="shell py-14 lg:py-20">
-        <CallCard mobile={info.mobile} phone={info.phone} />
+      <div className="relative isolate overflow-clip">
+        <Flares flip />
+        <div className="shell py-14 lg:py-20">
+          <CallCard mobile={info.mobile} phone={info.phone} />
+        </div>
       </div>
     </>
   );

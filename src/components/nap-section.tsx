@@ -1,3 +1,4 @@
+import { Flares } from "@/components/flares";
 import { SectionHeading } from "@/components/section-heading";
 import type { BusinessInfo } from "@/lib/content";
 import { telHref } from "@/lib/format";
@@ -14,7 +15,7 @@ type NapSectionProps = {
 };
 
 const termClass =
-  "text-[0.6875rem] font-semibold tracking-[0.18em] text-white/70 uppercase";
+  "text-[0.6875rem] font-semibold tracking-[0.18em] text-gold uppercase";
 
 export function NapSection({
   address,
@@ -31,9 +32,10 @@ export function NapSection({
   return (
     <section
       aria-labelledby="contacts-title"
-      className="py-20 lg:py-28"
+      className="relative isolate overflow-clip py-20 lg:py-28"
       id="contacts"
     >
+      <Flares lines />
       <div className="shell">
         <SectionHeading
           id="contacts-title"
@@ -41,7 +43,7 @@ export function NapSection({
           title="Find us"
         />
 
-        <div className="mt-8 grid gap-3 lg:grid-cols-12">
+        <div className="mt-8 grid gap-4 lg:grid-cols-12">
           <address className="reveal glass-card p-5 not-italic sm:p-6 lg:col-span-5">
             <dl className="divide-y divide-white/10">
               <div className="pb-4">
@@ -99,7 +101,7 @@ export function NapSection({
             </dl>
             {mapsUrl ? (
               <a
-                className="mt-5 inline-flex h-11 items-center gap-2 rounded-sm border border-gold/60 hover:border-gold px-5 font-display text-lg tracking-wider transition-colors duration-200 ease-race"
+                className="btn btn-glass mt-5 h-11 px-5 text-lg"
                 href={mapsUrl}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -109,9 +111,9 @@ export function NapSection({
             ) : null}
           </address>
 
-          <div className="reveal min-h-80 overflow-hidden rounded-sm border border-white/10 lg:col-span-7">
+          <div className="reveal glass-card min-h-80 p-2 lg:col-span-7">
             <iframe
-              className="size-full min-h-80 grayscale invert-[0.9]"
+              className="rounded-sm size-full min-h-80 grayscale invert-[0.9]"
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
               src={mapSrc}

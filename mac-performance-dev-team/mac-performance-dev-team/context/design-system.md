@@ -14,7 +14,9 @@ Direction: a real performance garage, not a tech startup. The site should look l
 ## Surfaces
 
 - Bento grid layout for feature sections.
-- Glass cards: `border-white/10`, background `white/3`–`white/5`, `backdrop-blur`. Blur is applied only where content sits over imagery; on flat black it is wasted GPU.
+- One glass for the whole site: the `glass-card` utility in `globals.css`, with a dark base for legibility, fine grain and a lit gold edge. Adjust it per use with `--glass-tint` and check contrast over the brightest photo behind it.
+- Glass always sits over a photo or a light beam. Over flat black, blur is invisible and wastes GPU.
+- Panels overlap photos instead of sitting beside them. Never over the MAC logo on the sign.
 - One elevation style across the site. Do not mix glass, solid, and shadowed cards in the same section.
 
 ## Locked decisions
@@ -22,7 +24,7 @@ Direction: a real performance garage, not a tech startup. The site should look l
 Do not change without explicit owner approval:
 
 - Hero: no red glow; keep the black left fade over the hero image.
-- Hero and reviews: thin slanted gold flares, approved by the project lead. They sit on black, never over a busy photo, and dim behind copy. The photo fills the top of the hero below 1024px, so the hero flares start at that width. The glow ban below still applies everywhere else.
+- Slanted gold light on every section, approved by the project lead, all on one 112° angle. Thin lines (`hero-flare`) sit on plain black only: over a photo they read as scratches. Soft shafts (`beam-flare`) may cross photos. Never a round core: it reads as an eye. Red never glows.
 - Gold (`--color-gold`) is the premium accent: hairlines, links, secondary buttons and the rating.
 - Repair card: no background image.
 - CTA card: no red background.
@@ -35,7 +37,7 @@ The following patterns make a site look template- or AI-generated. They are not 
 | Not allowed | Do instead |
 |---|---|
 | Purple/indigo/blue gradients, gradient text on headings | Solid white headings; accent color on one word or a hairline rule at most |
-| Neon glow, blurred color blobs, animated orbs behind content | Real photography of the shop, cars, and parts; black space |
+| Neon glow, blurred color blobs, animated orbs behind content | Real photography of the shop, cars, and parts; black space; slanted gold light |
 | Three identical icon cards in a row ("Fast. Reliable. Affordable.") | Cards with real content: service name, what it includes, price or "from" price from DB |
 | Emoji or sparkle icons as decoration | One consistent icon set, used only when the icon adds meaning |
 | Generic copy: "Elevate", "Unleash", "Seamless", "Next-level", "Your journey" | Plain, specific shop language: what the service is, what car, how long, how much |
@@ -48,5 +50,5 @@ The following patterns make a site look template- or AI-generated. They are not 
 ## Motion
 
 - Purposeful only: state feedback, menu open/close, content reveal at most once per section.
-- Durations short (150–250ms), easing consistent.
+- Durations short (150–250ms), easing consistent. Light passes and photo drift may run longer, and never loop.
 - Everything disabled or reduced under `prefers-reduced-motion`.

@@ -21,13 +21,13 @@ export default async function NotFound() {
       <p className="text-base text-white/85">That page is not here.</p>
       <div className="flex flex-wrap gap-3">
         <Link
-          className="bg-race hover:bg-race-deep inline-flex h-12 items-center rounded-sm px-6 font-display text-xl tracking-wider transition-colors duration-200 ease-race"
+          className="btn btn-race"
           href="/"
         >
           Back to the shop
         </Link>
         <a
-          className="border-gold/60 hover:border-gold inline-flex h-12 items-center rounded-sm border px-6 font-display text-xl tracking-wider tabular-nums transition-colors duration-200 ease-race"
+          className="btn btn-glass tabular-nums"
           href={telHref(info.phone)}
         >
           Call {info.phone}

@@ -1,12 +1,13 @@
 import Image from "next/image";
 
+import { Flares } from "@/components/flares";
 import { OpenStatus } from "@/components/open-status";
 import { RatingStars } from "@/components/rating-stars";
 import type { BusinessInfo } from "@/lib/content";
 import { telHref } from "@/lib/format";
 import type { GooglePlace } from "@/lib/google-place";
 
-const factLabelClass = "text-xs font-medium text-white/80";
+const factLabelClass = "text-xs font-medium text-white/85";
 
 export function Hero({
   info,
@@ -21,52 +22,52 @@ export function Hero({
       className="relative isolate overflow-hidden"
       id="top"
     >
-      {/* The sign carries the page, so the photo stays clear of the copy. Below
-          lg it is a band on top; from lg it fills the right of the hero. */}
-      <div className="absolute inset-x-0 top-0 -z-10 h-56 sm:h-96 lg:inset-y-0 lg:right-0 lg:left-auto lg:h-auto lg:w-[62%]">
+      {/* The sign carries the page, so the photo starts below the navbar and the
+          glass sits under the sign. Below lg it is a band on top; from lg it
+          fills the right of the hero. */}
+      <div className="absolute inset-x-0 top-0 -z-20 aspect-16/9 lg:inset-y-0 lg:right-0 lg:left-auto lg:aspect-auto lg:w-full xl:w-[84%]">
         <Image
           alt="The shop front with its yellow MAC sign, the accessories store and the service bay"
-          className="shop-photo object-cover object-top lg:object-[34%_0%]"
+          className="shop-photo object-cover object-top lg:object-[38%_0%]"
           fill
           preload
-          sizes="(min-width: 1024px) max(62vw, 178svh), 100vw"
+          sizes="(min-width: 1280px) max(84vw, 178svh), 100vw"
           src="/images/shop/storefront.webp"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-linear-to-t from-black to-transparent to-35% lg:hidden"
+          className="absolute inset-0 bg-linear-to-t from-black to-transparent to-45%"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 hidden bg-linear-to-r from-black to-transparent to-16% lg:block"
+          className="absolute inset-0 hidden bg-linear-to-r from-black to-transparent to-14% lg:block"
         />
       </div>
 
+      <Flares />
       <div
         aria-hidden="true"
-        className="hero-flare flare-in inset-y-0 left-0 -z-10 hidden w-3/4 lg:block"
+        className="hero-flare flare-in inset-y-0 left-0 -z-10 hidden w-[28%] xl:block"
       />
 
-      <div className="shell flex min-h-[calc(100svh-5rem)] flex-col justify-end gap-8 pt-52 pb-6 sm:pt-88 lg:justify-between lg:pt-24">
-        <div className="max-w-md lg:max-w-[20rem] xl:max-w-sm 2xl:max-w-md">
+      <div className="shell flex min-h-[calc(100svh-5rem)] flex-col justify-end gap-3 pt-[calc(56.25vw-3.5rem)] pb-6 lg:pt-16 lg:pb-8">
+        <div className="glass-card glass-sheen sheen-in rise-in p-5 [--glass-tint:0.5] sm:p-8 lg:max-w-xl lg:p-7 xl:p-10">
+          <p className="eyebrow">MAC Automotive Performance</p>
           <h1
-            className="font-display text-[clamp(3.25rem,5.6vw,6rem)] leading-[0.92] tracking-wide uppercase"
+            className="mt-3 font-display text-[clamp(3.25rem,5.6vw,5.75rem)] leading-[0.92] tracking-wide uppercase"
             id="hero-title"
           >
             Car repairs, tint, sound and parts.
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-white/85">
+          <p className="mt-4 text-base leading-relaxed text-white/90">
             On {info.area}. Open six days a week.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              className="bg-race hover:bg-race-deep inline-flex h-12 items-center rounded-sm px-6 font-display text-xl tracking-wider tabular-nums transition-colors duration-200 ease-race"
-              href={telHref(info.phone)}
-            >
+            <a className="btn btn-race tabular-nums" href={telHref(info.phone)}>
               Call {info.phone}
             </a>
             <a
-              className="inline-flex h-12 items-center rounded-sm border border-gold/60 hover:border-gold px-6 font-display text-xl tracking-wider transition-colors duration-200 ease-race"
+              className="btn btn-glass"
               href={info.mapsUrl}
               rel="noopener noreferrer"
               target="_blank"
@@ -76,8 +77,8 @@ export function Hero({
           </div>
         </div>
 
-        <dl className="rise-in glass-card bg-black/70! grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-          <div className="flex flex-col-reverse gap-1 p-4">
+        <dl className="rise-in glass-card grid [--glass-tint:0.55] divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="flex flex-col-reverse gap-1 p-4 lg:px-6">
             <dt className={factLabelClass}>
               {info.hours
                 .slice(0, -1)
@@ -88,7 +89,7 @@ export function Hero({
               <OpenStatus openHours={info.openHours} />
             </dd>
           </div>
-          <div className="flex flex-col-reverse gap-1 p-4">
+          <div className="flex flex-col-reverse gap-1 p-4 lg:px-6">
             <dt className={factLabelClass}>
               {place.reviewCount} Google reviews
             </dt>
@@ -97,7 +98,7 @@ export function Hero({
               <RatingStars className="text-base" fillClass="text-gold" rating={place.rating} />
             </dd>
           </div>
-          <div className="flex flex-col-reverse gap-1 p-4">
+          <div className="flex flex-col-reverse gap-1 p-4 lg:px-6">
             <dt className={factLabelClass}>Service bay and accessories store</dt>
             <dd className="font-display text-2xl tracking-wide">
               {info.address.split(",")[0]}

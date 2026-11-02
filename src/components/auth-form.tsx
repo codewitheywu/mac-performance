@@ -34,7 +34,7 @@ const COPY: Record<AuthMode, { submit: string; done: string }> = {
 
 // 16px text: iOS zooms the whole page when it focuses anything smaller.
 const inputClass =
-  "h-12 w-full rounded-sm border bg-white/5 px-4 text-base text-white transition-colors duration-200 ease-race focus:border-gold";
+  "h-12 w-full rounded-sm border bg-black/45 px-4 text-base text-white transition-colors duration-200 ease-race focus:border-gold";
 
 function Field({ error, hint, label, name, type, ...input }: FieldProps) {
   const [isShown, setIsShown] = useState(false);
@@ -52,7 +52,7 @@ function Field({ error, hint, label, name, type, ...input }: FieldProps) {
           aria-describedby={note ? noteId : undefined}
           aria-invalid={error ? true : undefined}
           className={`${inputClass} ${isPassword ? "pr-20" : ""} ${
-            error ? "border-race-bright" : "border-white/25"
+            error ? "border-race-bright" : "border-white/30"
           }`}
           id={name}
           name={name}
@@ -160,7 +160,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
       />
 
       <button
-        className="bg-race hover:bg-race-deep h-12 rounded-sm font-display text-xl tracking-wider transition-colors duration-200 ease-race"
+        className="btn btn-race"
         type="submit"
       >
         {submit}

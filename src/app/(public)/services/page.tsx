@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CallCard } from "@/components/booking-card";
+import { Flares } from "@/components/flares";
 import { PageHero } from "@/components/page-hero";
 import { ServicesBoard } from "@/components/services-board";
 import { getBusinessInfo, getServices } from "@/lib/content";
@@ -28,19 +29,24 @@ export default async function ServicesPage() {
         title="Services"
       />
 
-      <div className="shell flex flex-col gap-12 py-20 lg:py-28">
-        <ServicesBoard services={services} />
-        <p className="text-base text-white/85">
-          Buying a stereo, tint or an alarm?{" "}
-          <Link
-            className="text-gold decoration-gold/50 hover:decoration-gold -my-3 inline-block py-3 underline underline-offset-4"
-            href="/accessories"
-          >
-            See accessories
-          </Link>
-          .
-        </p>
-        <CallCard mobile={info.mobile} phone={info.phone} />
+      <div className="relative isolate overflow-clip">
+        <Flares lines />
+        <div className="shell flex flex-col gap-6 py-20 lg:py-28">
+          <div className="reveal glass-card p-6 sm:p-8 lg:p-12">
+            <ServicesBoard services={services} />
+            <p className="mt-8 text-base text-white/85">
+              Buying a stereo, tint or an alarm?{" "}
+              <Link
+                className="text-gold decoration-gold/50 hover:decoration-gold -my-3 inline-block py-3 underline underline-offset-4"
+                href="/accessories"
+              >
+                See accessories
+              </Link>
+              .
+            </p>
+          </div>
+          <CallCard mobile={info.mobile} phone={info.phone} />
+        </div>
       </div>
     </>
   );
