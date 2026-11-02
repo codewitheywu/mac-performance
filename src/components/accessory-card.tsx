@@ -32,7 +32,7 @@ export function AccessoryCard({
         sizes={sizes}
         src={accessory.image.src}
       />
-      <div className="glass-card glass-sheen px-4 py-3 [--glass-tint:0.5]">
+      <div className="glass-card glass-sheen px-4 py-3 [--glass-tint:0.72]">
         <h3 className={nameClass}>{accessory.name}</h3>
       </div>
     </li>

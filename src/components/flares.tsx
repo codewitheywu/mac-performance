@@ -16,7 +16,7 @@ export function Flares({ flip = false, lines = false }: FlaresProps) {
       }`}
     >
       <div className="beam-flare flare-in inset-0" />
-      <div className="flare-streak flare-in top-[24%] left-[-22rem] hidden sm:block" />
+      <div className="flare-streak flare-in top-[24%] -left-88 hidden sm:block" />
       {lines ? <div className="hero-flare flare-in inset-0" /> : null}
     </div>
   );

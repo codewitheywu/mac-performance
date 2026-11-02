@@ -27,15 +27,15 @@
   --rise-timing: 560ms var(--ease-race);
   --rise-distance: 2.5rem;
 
-  --glass-blur: 22px;
+  --glass-filter: blur(22px) saturate(170%);
   /* Fine frost, so large glass reads as a material and not a flat tint. */
   --glass-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Phones repaint every blurred layer on scroll, so they get a lighter blur. */
+/* Phones repaint every blurred layer on scroll, so they get a lighter one. */
 @media (max-width: 1023px) {
   :root {
-    --glass-blur: 14px;
+    --glass-filter: blur(10px);
   }
 }
 
@@ -89,8 +89,8 @@ dialog::backdrop {
    over a bright photo, and the pseudo-element draws a lit gold edge that a plain
    border cannot. */
 @utility glass-card {
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%);
-  backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
   background:
     var(--glass-grain),
     linear-gradient(
@@ -243,7 +243,6 @@ dialog::backdrop {
       --alpha(var(--color-gold) / 12%) 69%,
       transparent 75%
     );
-  mix-blend-mode: screen;
   pointer-events: none;
   position: absolute;
 }
@@ -267,7 +266,6 @@ dialog::backdrop {
       transparent 72%
     );
   height: 7rem;
-  mix-blend-mode: screen;
   pointer-events: none;
   position: absolute;
   rotate: -22deg;
@@ -527,12 +525,14 @@ dialog::backdrop {
     }
   }
 
-  /* Photos drift a little against the page. Runs off the main thread, and
-     browsers without view timelines simply show a still photo. */
-  @supports (animation-timeline: view()) {
-    .photo-drift {
-      animation: photo-drift linear both;
-      animation-timeline: view();
+  /* Photos drift a little against the page on larger screens. Browsers without
+     view timelines simply show a still photo. */
+  @media (min-width: 1024px) {
+    @supports (animation-timeline: view()) {
+      .photo-drift {
+        animation: photo-drift linear both;
+        animation-timeline: view();
+      }
     }
   }
 
