@@ -26,7 +26,7 @@ export function AuthPage({ image, mode, phone, summary, title }: AuthPageProps) 
   return (
     <section className="relative isolate flex min-h-[calc(100svh-5rem)] items-center overflow-clip">
       {/* The whole photo, never cropped, so the card sits beside the MAC logo
-          and not on it. Also keeps the form high on a phone. */}
+          and not on it. */}
       <div
         aria-hidden="true"
         className="absolute inset-x-0 top-0 -z-20 aspect-16/9 lg:left-auto lg:w-[68%] xl:w-[74%]"
@@ -44,8 +44,8 @@ export function AuthPage({ image, mode, phone, summary, title }: AuthPageProps) 
       </div>
       <Flares />
 
-      <div className="shell pt-[calc(56.25vw-3.5rem)] pb-8 lg:py-12">
-        <div className="glass-card glass-sheen sheen-in rise-in mx-auto max-w-lg p-5 [--glass-tint:0.55] sm:p-8 lg:mx-0 lg:p-10">
+      <div className="shell pt-[min(calc(56.25vw-3.5rem),12rem)] pb-8 lg:py-12">
+        <div className="glass-card glass-sheen sheen-in mx-auto max-w-lg p-5 [--glass-tint:0.55] sm:p-8 lg:mx-0 lg:p-10">
           <span aria-hidden="true" className="slant-tick mb-3" />
           <h1 className="font-display text-[clamp(3.25rem,7vw,5rem)] leading-[0.92] tracking-wide uppercase">
             {title}

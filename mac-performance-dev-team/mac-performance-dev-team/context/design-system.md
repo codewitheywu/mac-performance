@@ -24,7 +24,7 @@ Direction: a real performance garage, not a tech startup. The site should look l
 Do not change without explicit owner approval:
 
 - Hero: no red glow; keep the black left fade over the hero image.
-- Slanted gold light on every section, approved by the project lead, all on one 112° angle. Thin lines (`hero-flare`) sit on plain black only: over a photo they read as scratches. Soft shafts (`beam-flare`) may cross photos. Never a round core: it reads as an eye. Red never glows.
+- Slanted gold light on every section, approved by the project lead, all on one 112° angle, mirrored on alternate sections. Thin lines (`hero-flare`) sit on plain black only: over a photo they read as scratches. Soft shafts (`beam-flare`) may cross photos. Never a round core: it reads as an eye. Red never glows.
 - Gold (`--color-gold`) is the premium accent: hairlines, links, secondary buttons and the rating.
 - Repair card: no background image.
 - CTA card: no red background.

@@ -10,7 +10,7 @@ type PageHeroProps = {
 
 export function PageHero({ title, summary, image }: PageHeroProps) {
   return (
-    <section className="relative isolate flex min-h-96 items-end overflow-clip lg:min-h-[32rem]">
+    <section className="relative isolate flex min-h-96 items-end overflow-clip lg:min-h-[max(32rem,38vw)]">
       <Image
         alt={image.alt}
         className={`shop-photo -z-20 object-cover ${image.position}`}
@@ -25,7 +25,7 @@ export function PageHero({ title, summary, image }: PageHeroProps) {
       />
       <Flares />
       <div className="shell pt-32 pb-8">
-        <div className="glass-card glass-sheen sheen-in rise-in max-w-2xl p-6 [--glass-tint:0.5] sm:p-8">
+        <div className="glass-card glass-sheen sheen-in max-w-2xl p-6 [--glass-tint:0.5] sm:p-8">
           <span aria-hidden="true" className="slant-tick mb-3" />
           <h1 className="font-display text-[clamp(3.25rem,7vw,6rem)] leading-[0.92] tracking-wide uppercase">
             {title}

@@ -1,8 +1,8 @@
 type FlaresProps = {
   // Mirrors the light, so stacked sections do not repeat the same pattern.
   flip?: boolean;
-  // Thin bright lines. Only for areas of plain black: over a photo they read as
-  // scratches.
+  // Thin bright lines and a streak. Only for areas of plain black: over a photo
+  // they read as scratches.
   lines?: boolean;
 };
 
@@ -16,8 +16,12 @@ export function Flares({ flip = false, lines = false }: FlaresProps) {
       }`}
     >
       <div className="beam-flare flare-in inset-0" />
-      <div className="flare-streak flare-in top-[24%] -left-88 hidden sm:block" />
-      {lines ? <div className="hero-flare flare-in inset-0" /> : null}
+      {lines ? (
+        <>
+          <div className="flare-streak flare-in top-[24%] -left-88 hidden sm:block" />
+          <div className="hero-flare flare-in inset-0" />
+        </>
+      ) : null}
     </div>
   );
 }

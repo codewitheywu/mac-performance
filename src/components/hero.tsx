@@ -31,7 +31,7 @@ export function Hero({
           className="shop-photo object-cover object-top lg:object-[38%_0%]"
           fill
           preload
-          sizes="(min-width: 1280px) max(84vw, 178svh), 100vw"
+          sizes="(min-width: 1280px) max(84vw, 178svh), (min-width: 1024px) max(100vw, 178svh), 100vw"
           src="/images/shop/storefront.webp"
         />
         <div
@@ -50,8 +50,8 @@ export function Hero({
         className="hero-flare flare-in inset-y-0 left-0 -z-10 hidden w-[28%] xl:block"
       />
 
-      <div className="shell flex min-h-[calc(100svh-5rem)] flex-col justify-end gap-3 pt-[calc(56.25vw-3.5rem)] pb-6 lg:pt-16 lg:pb-8">
-        <div className="glass-card glass-sheen sheen-in rise-in p-5 [--glass-tint:0.5] sm:p-8 lg:max-w-xl lg:p-7 xl:p-10">
+      <div className="shell flex min-h-[calc(100svh-5rem)] flex-col justify-end gap-3 pt-[calc(56.25vw-3.5rem)] pb-6 lg:min-h-[max(calc(100svh-5rem),52rem)] lg:pt-16 lg:pb-8">
+        <div className="glass-card glass-sheen sheen-in p-5 [--glass-tint:0.5] sm:p-8 lg:max-w-xl lg:p-7 xl:p-10">
           <p className="eyebrow">MAC Automotive Performance</p>
           <h1
             className="mt-3 font-display text-[clamp(3.25rem,5.6vw,5.75rem)] leading-[0.92] tracking-wide uppercase"
