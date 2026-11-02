@@ -14,7 +14,7 @@ export default async function SignupPage() {
 
   return (
     <AuthPage
-      image="/images/shop/steering-wheels.webp"
+      image="/images/shop/storefront.webp"
       mode="signup"
       phone={info.phone}
       summary="Book a visit, follow your orders and message the shop from one account."
