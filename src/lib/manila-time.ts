@@ -1,3 +1,5 @@
+import { useMemo, useSyncExternalStore } from "react";
+
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export type ManilaNow = {
@@ -29,4 +31,22 @@ export function manilaNow(): ManilaNow {
     day: WEEKDAYS.indexOf(part("weekday")),
     hour: Number(part("hour")) % 24,
   };
+}
+
+export function subscribeToClock(onChange: () => void) {
+  const timer = window.setInterval(onChange, 60_000);
+  return () => window.clearInterval(timer);
+}
+
+// Null while prerendered: a static page cannot know the time.
+export function useManilaNow() {
+  const stamp = useSyncExternalStore(
+    subscribeToClock,
+    () => JSON.stringify(manilaNow()),
+    () => null,
+  );
+  return useMemo(
+    () => (stamp ? (JSON.parse(stamp) as ManilaNow) : null),
+    [stamp],
+  );
 }

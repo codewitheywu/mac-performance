@@ -15,6 +15,20 @@ export type BookingErrors = Partial<Record<"service" | "car" | "slot", string>>;
 const DATES_ON_OFFER = 12;
 const MAX_CAR_LENGTH = 80;
 
+const WEEKDAY_FORMAT = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  weekday: "short",
+});
+const DAY_FORMAT = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  month: "short",
+  day: "numeric",
+});
+
+export function slotId(date: string, hour: number) {
+  return `${date}-${hour}`;
+}
+
 function shiftDate(date: string, days: number) {
   const shifted = new Date(`${date}T00:00:00Z`);
   shifted.setUTCDate(shifted.getUTCDate() + days);
@@ -27,13 +41,10 @@ function weekdayOf(date: string) {
 
 // Dates are plain calendar days, so UTC here cannot shift them.
 export function dateLabel(date: string) {
-  const format = (options: Intl.DateTimeFormatOptions) =>
-    new Intl.DateTimeFormat("en-US", { timeZone: "UTC", ...options }).format(
-      new Date(`${date}T00:00:00Z`),
-    );
+  const parsed = new Date(`${date}T00:00:00Z`);
   return {
-    weekday: format({ weekday: "short" }),
-    day: format({ month: "short", day: "numeric" }),
+    weekday: WEEKDAY_FORMAT.format(parsed),
+    day: DAY_FORMAT.format(parsed),
   };
 }
 
@@ -85,7 +96,7 @@ export function validateBooking(
     openSlots(rules.openHours, input.date, rules.now).includes(input.hour);
   if (!isOpen) {
     errors.slot = "Choose a day and a time.";
-  } else if (rules.takenSlots.includes(`${input.date}-${input.hour}`)) {
+  } else if (rules.takenSlots.includes(slotId(input.date, input.hour as number))) {
     errors.slot = "You already have a visit booked at that time.";
   }
   return errors;

@@ -1,13 +1,14 @@
 "use client";
 
+import { useRef, useState } from "react";
+
 import {
   type Appointment,
   removeAppointment,
   useAppointments,
-  useManilaNow,
 } from "@/lib/appointment-store";
 import { dateLabel } from "@/lib/appointment-rules";
-import { hourLabel } from "@/lib/manila-time";
+import { hourLabel, useManilaNow } from "@/lib/manila-time";
 
 function visitLabel({ date, hour }: Appointment) {
   const { day, weekday } = dateLabel(date);
@@ -17,6 +18,15 @@ function visitLabel({ date, hour }: Appointment) {
 export function AppointmentList() {
   const now = useManilaNow();
   const appointments = useAppointments();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const [cancelled, setCancelled] = useState("");
+
+  // The row and its button disappear, so focus moves somewhere that stays.
+  const cancel = (item: Appointment) => {
+    removeAppointment(item.id);
+    setCancelled(`${item.serviceName} on ${visitLabel(item)} cancelled.`);
+    headingRef.current?.focus();
+  };
 
   const upcoming = now
     ? appointments
@@ -37,6 +47,8 @@ export function AppointmentList() {
       <h2
         className="mt-2 font-display text-4xl leading-none tracking-wide uppercase"
         id="upcoming-title"
+        ref={headingRef}
+        tabIndex={-1}
       >
         Your visits
       </h2>
@@ -52,7 +64,7 @@ export function AppointmentList() {
                 <p className="font-display text-2xl leading-tight tracking-wide uppercase">
                   {item.serviceName}
                 </p>
-                <p className="text-sm break-words text-white/90">{item.car}</p>
+                <p className="text-sm wrap-anywhere text-white/90">{item.car}</p>
                 <p className="text-gold text-sm font-medium tabular-nums">
                   {visitLabel(item)}
                 </p>
@@ -60,7 +72,7 @@ export function AppointmentList() {
               <button
                 aria-label={`Cancel ${item.serviceName}, ${visitLabel(item)}`}
                 className="text-gold min-h-11 shrink-0 px-2 text-sm font-semibold hover:underline"
-                onClick={() => removeAppointment(item.id)}
+                onClick={() => cancel(item)}
                 type="button"
               >
                 Cancel
@@ -68,11 +80,17 @@ export function AppointmentList() {
             </li>
           ))}
         </ul>
-      ) : (
+      ) : now ? (
         <p className="mt-4 text-base leading-relaxed text-white/90">
-          Nothing booked yet.
+          No visits coming up.
         </p>
+      ) : (
+        <div className="mt-4 h-7 rounded-sm bg-white/5" />
       )}
+
+      <div className="mt-3 text-sm leading-relaxed text-white/90" role="status">
+        {cancelled}
+      </div>
     </section>
   );
 }

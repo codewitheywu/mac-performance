@@ -2,20 +2,17 @@
 
 import { type FormEvent, useState } from "react";
 
-import {
-  addAppointment,
-  useAppointments,
-  useManilaNow,
-} from "@/lib/appointment-store";
+import { addAppointment, useAppointments } from "@/lib/appointment-store";
 import {
   type BookingErrors,
   dateLabel,
   openDates,
   openSlots,
+  slotId,
   validateBooking,
 } from "@/lib/appointment-rules";
 import type { BusinessInfo, Service } from "@/lib/content";
-import { hourLabel } from "@/lib/manila-time";
+import { hourLabel, useManilaNow } from "@/lib/manila-time";
 
 type BookingPanelProps = {
   openHours: BusinessInfo["openHours"];
@@ -42,13 +39,16 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
   const [service, setService] = useState("");
   const [car, setCar] = useState("");
   const [pickedDate, setPickedDate] = useState("");
-  const [hour, setHour] = useState<number | null>(null);
+  const [pickedHour, setPickedHour] = useState<number | null>(null);
   const [errors, setErrors] = useState<BookingErrors>({});
-  const [booked, setBooked] = useState("");
+  const [booked, setBooked] = useState({ id: "", message: "" });
 
   // Everything below depends on today, so it waits for the browser.
   const dates = now ? openDates(openHours, now) : [];
   const date = dates.includes(pickedDate) ? pickedDate : (dates[0] ?? "");
+  // A time only counts on the day it was picked. If the clock retires that day,
+  // the customer chooses again instead of being moved to another date.
+  const hour = pickedDate === date ? pickedHour : null;
   const slots = now && date ? openSlots(openHours, date, now) : [];
   const takenSlots = appointments.map((item) => item.id);
 
@@ -66,7 +66,7 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
       },
     );
     setErrors(found);
-    setBooked("");
+    setBooked({ id: "", message: "" });
 
     const [firstInvalid] = Object.keys(found);
     if (firstInvalid) {
@@ -74,20 +74,19 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
       return;
     }
 
+    const bookedHour = hour as number;
+    const id = slotId(date, bookedHour);
     const serviceName = services.find((item) => item.slug === service)?.name ?? "";
-    addAppointment({
-      car: car.trim(),
-      date,
-      hour: hour as number,
-      id: `${date}-${hour}`,
-      serviceName,
-    });
+    addAppointment({ car: car.trim(), date, hour: bookedHour, id, serviceName });
 
     const { day, weekday } = dateLabel(date);
-    setBooked(`${serviceName} saved for ${weekday}, ${day} at ${hourLabel(hour as number)}.`);
+    setBooked({
+      id,
+      message: `${serviceName} saved for ${weekday}, ${day} at ${hourLabel(bookedHour)}.`,
+    });
     setService("");
     setCar("");
-    setHour(null);
+    setPickedHour(null);
   };
 
   return (
@@ -172,7 +171,7 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
                         name="date"
                         onChange={() => {
                           setPickedDate(item);
-                          setHour(null);
+                          setPickedHour(null);
                         }}
                         type="radio"
                       />
@@ -186,7 +185,7 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
               })}
             </ul>
           ) : (
-            <div className="mt-1.5 h-26 rounded-sm bg-white/5" />
+            <div className="mt-1.5 h-54 rounded-sm bg-white/5 sm:h-40 lg:h-26" />
           )}
         </fieldset>
 
@@ -200,9 +199,12 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
                     <input
                       checked={item === hour}
                       className="sr-only"
-                      disabled={takenSlots.includes(`${date}-${item}`)}
+                      disabled={takenSlots.includes(slotId(date, item))}
                       name="hour"
-                      onChange={() => setHour(item)}
+                      onChange={() => {
+                        setPickedDate(date);
+                        setPickedHour(item);
+                      }}
                       type="radio"
                     />
                     <span className="text-sm font-medium tabular-nums">
@@ -213,7 +215,7 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
               ))}
             </ul>
           ) : (
-            <div className="mt-1.5 h-26 rounded-sm bg-white/5" />
+            <div className="mt-1.5 h-40 rounded-sm bg-white/5 sm:h-26" />
           )}
           <FieldError id="slot-error" message={errors.slot} />
         </fieldset>
@@ -222,9 +224,11 @@ export function BookingPanel({ openHours, services }: BookingPanelProps) {
           Book this visit
         </button>
 
-        <p className="empty:hidden text-sm leading-relaxed" role="status">
-          {booked}
-        </p>
+        {/* Stays mounted, or screen readers can miss the message. Clears itself
+            if that visit is cancelled. */}
+        <div className="text-sm leading-relaxed" role="status">
+          {takenSlots.includes(booked.id) ? booked.message : null}
+        </div>
       </form>
     </section>
   );

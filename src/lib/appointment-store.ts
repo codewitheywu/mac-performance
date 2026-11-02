@@ -1,8 +1,6 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
-
-import { manilaNow, type ManilaNow } from "@/lib/manila-time";
+import { useSyncExternalStore } from "react";
 
 export type Appointment = {
   // `date-hour`: one visit per slot.
@@ -21,6 +19,8 @@ const NONE: Appointment[] = [];
 let cache: Appointment[] | null = null;
 const listeners = new Set<() => void>();
 
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
 function isAppointment(value: unknown): value is Appointment {
   const item = value as Appointment | null;
   return (
@@ -28,7 +28,11 @@ function isAppointment(value: unknown): value is Appointment {
     typeof item.serviceName === "string" &&
     typeof item.car === "string" &&
     typeof item.date === "string" &&
-    typeof item.hour === "number"
+    DATE_PATTERN.test(item.date) &&
+    !Number.isNaN(Date.parse(item.date)) &&
+    Number.isInteger(item.hour) &&
+    item.hour >= 0 &&
+    item.hour < 24
   );
 }
 
@@ -81,22 +85,4 @@ export function addAppointment(appointment: Appointment) {
 
 export function removeAppointment(id: string) {
   save(getSnapshot().filter((item) => item.id !== id));
-}
-
-function subscribeToClock(onChange: () => void) {
-  const timer = window.setInterval(onChange, 60_000);
-  return () => window.clearInterval(timer);
-}
-
-// Null while prerendered: a static page cannot know the time.
-export function useManilaNow() {
-  const stamp = useSyncExternalStore(
-    subscribeToClock,
-    () => JSON.stringify(manilaNow()),
-    () => null,
-  );
-  return useMemo(
-    () => (stamp ? (JSON.parse(stamp) as ManilaNow) : null),
-    [stamp],
-  );
 }

@@ -171,7 +171,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
         type="password"
       />
 
-      <button className="btn btn-race" disabled={isOpening} type="submit">
+      <button className="btn btn-race" type="submit">
         {isOpening ? "Opening..." : submit}
       </button>
 

@@ -30,8 +30,8 @@ export default async function AppointmentsPage() {
 
       <div className="relative isolate overflow-clip">
         <Flares lines />
-        <div className="shell grid gap-4 py-14 lg:grid-cols-12 lg:items-start lg:py-20">
-          <div className="flex flex-col gap-4 lg:sticky lg:top-24 lg:col-span-5">
+        <div className="shell grid grid-cols-1 gap-4 py-14 lg:grid-cols-12 lg:items-start lg:py-20">
+          <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-24 lg:col-span-5">
             <AppointmentList />
 
             <section
@@ -64,7 +64,7 @@ export default async function AppointmentsPage() {
             </section>
           </div>
 
-          <div className="lg:col-span-7">
+          <div className="min-w-0 lg:col-span-7">
             <BookingPanel
               openHours={info.openHours}
               services={services.map(({ name, slug }) => ({ name, slug }))}

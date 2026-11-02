@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 import type { BusinessInfo } from "@/lib/content";
-import { hourLabel, manilaNow } from "@/lib/manila-time";
+import { hourLabel, manilaNow, subscribeToClock } from "@/lib/manila-time";
 
 const WEEKDAY_NAMES = [
   "Sunday",
@@ -35,11 +35,6 @@ function statusText(openHours: BusinessInfo["openHours"]) {
   return "Closed";
 }
 
-function subscribe(onChange: () => void) {
-  const timer = window.setInterval(onChange, 60_000);
-  return () => window.clearInterval(timer);
-}
-
 // Rendered only in the browser: a prerendered page cannot know the time.
 export function OpenStatus({
   openHours,
@@ -47,7 +42,7 @@ export function OpenStatus({
   openHours: BusinessInfo["openHours"];
 }) {
   const status = useSyncExternalStore(
-    subscribe,
+    subscribeToClock,
     () => statusText(openHours),
     () => null,
   );
