@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   type ComponentProps,
   type FormEvent,
+  useEffect,
   useState,
 } from "react";
 
@@ -13,6 +15,7 @@ import {
   MIN_PASSWORD_LENGTH,
   validateAuthForm,
 } from "@/lib/auth-rules";
+import { APPOINTMENTS_LINK } from "@/lib/navigation";
 
 type FieldProps = ComponentProps<"input"> & {
   error?: string;
@@ -21,20 +24,16 @@ type FieldProps = ComponentProps<"input"> & {
   name: AuthField;
 };
 
-const COPY: Record<AuthMode, { submit: string; done: string }> = {
+const COPY: Record<AuthMode, { submit: string; note: string }> = {
   login: {
     submit: "Log in",
-    done: "Sample only, so you were not logged in. Nothing you typed was saved or sent.",
+    note: "Sample login. No account needed yet, so just tap Log in to look around. Nothing you type here is saved or sent.",
   },
   signup: {
     submit: "Create account",
-    done: "Sample only, so no account was created. Nothing you typed was saved or sent.",
+    note: "Sample sign up. Nothing you type here is saved or sent.",
   },
 };
-
-// 16px text: iOS zooms the whole page when it focuses anything smaller.
-const inputClass =
-  "h-12 w-full rounded-sm border bg-black/45 px-4 text-base text-white transition-colors duration-200 ease-race focus:border-gold";
 
 function Field({ error, hint, label, name, type, ...input }: FieldProps) {
   const [isShown, setIsShown] = useState(false);
@@ -51,7 +50,7 @@ function Field({ error, hint, label, name, type, ...input }: FieldProps) {
         <input
           aria-describedby={note ? noteId : undefined}
           aria-invalid={error ? true : undefined}
-          className={`${inputClass} ${isPassword ? "pr-20" : ""} ${
+          className={`field-input ${isPassword ? "pr-20" : ""} ${
             error ? "border-race-bright" : "border-white/30"
           }`}
           id={name}
@@ -82,40 +81,53 @@ function Field({ error, hint, label, name, type, ...input }: FieldProps) {
   );
 }
 
-// No account system exists yet. The form action below runs in the browser, so
-// a password never leaves the page, even if it is submitted before hydration.
+// No account system exists yet, so the sample login lets anyone straight in and
+// /appointments has no gate. The form action below runs in the browser, so a
+// password never leaves the page, even if it is submitted before hydration.
 // Accounts arrive by swapping that action for a Server Action that re-runs
 // validateAuthForm on the server.
 export function AuthForm({ mode }: { mode: AuthMode }) {
+  const router = useRouter();
   const [errors, setErrors] = useState<AuthErrors>({});
-  const [isDone, setIsDone] = useState(false);
-  const { done, submit } = COPY[mode];
+  const [isOpening, setIsOpening] = useState(false);
+  const { note, submit } = COPY[mode];
+  const isLogin = mode === "login";
 
+  // Fetched ahead, so going in does not wait on the network.
+  useEffect(() => {
+    router.prefetch(APPOINTMENTS_LINK.href);
+  }, [router]);
+
+  // Set here and not in the action: state set in an action only shows once the
+  // navigation has finished, which is too late to reassure anyone.
   const check = (event: FormEvent<HTMLFormElement>) => {
+    if (isLogin) {
+      setIsOpening(true);
+      return;
+    }
+
     const form = event.currentTarget;
     const found = validateAuthForm(mode, new FormData(form));
     setErrors(found);
-    setIsDone(false);
 
     const [firstInvalid] = Object.keys(found);
     if (firstInvalid) {
       event.preventDefault();
       form.querySelector<HTMLInputElement>(`#${firstInvalid}`)?.focus();
+      return;
     }
+    setIsOpening(true);
   };
-
-  const isLogin = mode === "login";
 
   return (
     <form
-      action={() => setIsDone(true)}
+      action={() => router.push(APPOINTMENTS_LINK.href)}
       className="flex flex-col gap-5"
       noValidate
       onSubmit={check}
     >
       <p className="border-gold border-l-2 pl-3 text-sm leading-relaxed text-white/85">
-        Sample page. Accounts open with the live site, so nothing you enter here
-        is saved or sent.
+        {note}
       </p>
 
       {isLogin ? null : (
@@ -159,16 +171,10 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
         type="password"
       />
 
-      <button
-        className="btn btn-race"
-        type="submit"
-      >
-        {submit}
+      <button className="btn btn-race" disabled={isOpening} type="submit">
+        {isOpening ? "Opening..." : submit}
       </button>
 
-      <p className="empty:hidden text-sm leading-relaxed text-white/85" role="status">
-        {isDone ? done : null}
-      </p>
     </form>
   );
 }
