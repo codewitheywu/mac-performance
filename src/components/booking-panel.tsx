@@ -11,14 +11,21 @@ import {
   slotId,
   validateBooking,
 } from "@/lib/appointment-rules";
-import type { Accessory, BusinessInfo, Service } from "@/lib/content";
+import {
+  type CartItem,
+  clearCart,
+  lineLabel,
+  resolveCart,
+  useCart,
+} from "@/lib/cart-store";
+import type { BusinessInfo, Service } from "@/lib/content";
+import { formatPeso } from "@/lib/format";
 import { hourLabel, useManilaNow } from "@/lib/manila-time";
-import { clearShopList, useShopList } from "@/lib/shop-list-store";
 
 type BookingPanelProps = {
-  accessories: Pick<Accessory, "name" | "slug">[];
+  catalog: CartItem["product"][];
   openHours: BusinessInfo["openHours"];
-  services: Pick<Service, "name" | "slug">[];
+  services: Pick<Service, "details" | "name" | "slug">[];
 };
 
 const legendClass = "text-sm font-medium";
@@ -35,13 +42,13 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 }
 
 export function BookingPanel({
-  accessories,
+  catalog,
   openHours,
   services,
 }: BookingPanelProps) {
   const now = useManilaNow();
   const appointments = useAppointments();
-  const shopList = useShopList();
+  const cartLines = useCart();
 
   const [service, setService] = useState("");
   const [car, setCar] = useState("");
@@ -59,9 +66,8 @@ export function BookingPanel({
   const hour = pickedDate === date ? pickedHour : null;
   const slots = now && date ? openSlots(openHours, date, now) : [];
   const takenSlots = appointments.map((item) => item.id);
-  const listNames = accessories
-    .filter((item) => shopList.includes(item.slug))
-    .map((item) => item.name);
+  const orderLines = resolveCart(cartLines, catalog).map(lineLabel);
+  const details = services.find((item) => item.slug === service)?.details;
 
   const book = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -88,13 +94,13 @@ export function BookingPanel({
     const bookedHour = hour as number;
     const id = slotId(date, bookedHour);
     const serviceName = services.find((item) => item.slug === service)?.name ?? "";
-    // The list moves onto the visit, so it is not fitted twice.
-    const extras = isFitting && listNames.length > 0 ? listNames : undefined;
+    // The order moves onto the visit, so it is not handed over twice.
+    const extras = isFitting && orderLines.length > 0 ? orderLines : undefined;
     addAppointment({ car: car.trim(), date, extras, hour: bookedHour, id, serviceName });
-    if (extras) clearShopList();
+    if (extras) clearCart();
 
     const { day, weekday } = dateLabel(date);
-    const fitting = extras ? `, fitting ${extras.join(", ")}` : "";
+    const fitting = extras ? `, with ${extras.join(", ")}` : "";
     setBooked({
       id,
       message: `${serviceName} saved for ${weekday}, ${day} at ${hourLabel(bookedHour)}${fitting}.`,
@@ -128,7 +134,9 @@ export function BookingPanel({
             Service
           </label>
           <select
-            aria-describedby={errors.service ? "service-error" : undefined}
+            aria-describedby={
+              errors.service ? "service-error" : details ? "service-hint" : undefined
+            }
             aria-invalid={errors.service ? true : undefined}
             className={`field-input mt-1.5 ${
               errors.service ? "border-race-bright" : "border-white/30"
@@ -144,6 +152,15 @@ export function BookingPanel({
               </option>
             ))}
           </select>
+          {details && !errors.service ? (
+            <p className="mt-1.5 text-sm text-white/85" id="service-hint">
+              {details.duration}. From{" "}
+              <span className="text-gold font-semibold tabular-nums">
+                {formatPeso(details.fromPrice)}
+              </span>
+              , demo price.
+            </p>
+          ) : null}
           <FieldError id="service-error" message={errors.service} />
         </div>
 
@@ -237,7 +254,7 @@ export function BookingPanel({
           <FieldError id="slot-error" message={errors.slot} />
         </fieldset>
 
-        {listNames.length > 0 ? (
+        {orderLines.length > 0 ? (
           <label className="has-checked:border-gold has-focus-visible:outline-spark flex min-h-12 cursor-pointer items-start gap-3 rounded-sm border border-white/30 bg-black/45 p-3 has-focus-visible:outline-2 has-focus-visible:outline-offset-2">
             <input
               checked={isFitting}
@@ -246,8 +263,10 @@ export function BookingPanel({
               type="checkbox"
             />
             <span className="text-sm leading-relaxed">
-              <span className="font-medium">Fit my shop list on this visit</span>
-              <span className="block text-white/85">{listNames.join(", ")}</span>
+              <span className="font-medium">
+                Add my order to this visit, to collect or fit
+              </span>
+              <span className="block text-white/85">{orderLines.join(", ")}</span>
             </span>
           </label>
         ) : null}

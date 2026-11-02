@@ -33,8 +33,12 @@ export default async function ServicesPage() {
         <Flares lines />
         <div className="shell flex flex-col gap-6 py-20 lg:py-28">
           <div className="reveal glass-card p-6 sm:p-8 lg:p-12">
-            <ServicesBoard services={services} />
-            <p className="mt-8 text-base text-white/85">
+            <ServicesBoard detailed services={services} />
+            <p className="border-gold mt-6 border-l-2 pl-3 text-sm leading-relaxed text-white/85">
+              Demo prices for the sample site. The final price is quoted after
+              we check the car.
+            </p>
+            <p className="mt-6 text-base text-white/85">
               Buying a stereo, tint or an alarm?{" "}
               <Link
                 className="text-gold decoration-gold/50 hover:decoration-gold -my-3 inline-block py-3 underline underline-offset-4"

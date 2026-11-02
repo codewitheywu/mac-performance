@@ -21,15 +21,17 @@ export function AccountHeader() {
           </Link>
           <nav aria-label="Account">
             <ul className="flex items-center gap-1 sm:gap-4">
+              {/* Plain links: they only scroll this page, and the router would
+                  fetch it again first. */}
               <li className="hidden sm:block">
-                <Link className={linkClass} href={`${APPOINTMENTS_LINK.href}#appointments`}>
+                <a className={linkClass} href={`${APPOINTMENTS_LINK.href}#appointments`}>
                   {APPOINTMENTS_LINK.label}
-                </Link>
+                </a>
               </li>
               <li>
-                <Link className={linkClass} href={`${APPOINTMENTS_LINK.href}#shop`}>
+                <a className={linkClass} href={`${APPOINTMENTS_LINK.href}#shop`}>
                   Shop
-                </Link>
+                </a>
               </li>
               <li className="hidden md:block">
                 <Link className={linkClass} href="/">

@@ -67,7 +67,7 @@ export function AppointmentList() {
                 <p className="text-sm wrap-anywhere text-white/90">{item.car}</p>
                 {item.extras?.length ? (
                   <p className="text-sm text-white/90">
-                    Fitting {item.extras.join(", ")}
+                    With {item.extras.join(", ")}
                   </p>
                 ) : null}
                 <p className="text-gold text-sm font-medium tabular-nums">

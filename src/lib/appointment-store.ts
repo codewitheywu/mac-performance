@@ -9,7 +9,7 @@ export type Appointment = {
   car: string;
   date: string;
   hour: number;
-  // Accessories from the shop list to fit on this visit. Older bookings have none.
+  // Order lines to collect or fit on this visit. Older bookings have none.
   extras?: string[];
 };
 

@@ -29,7 +29,7 @@ export const shopInfo: BusinessInfo = {
   ],
 };
 
-export const shopServices: Service[] = [
+export const shopServices: Omit<Service, "details">[] = [
   { slug: "oil-change", name: "Oil change", isFeatured: true },
   { slug: "brakes", name: "Brakes", isFeatured: true },
   { slug: "suspension", name: "Suspension", isFeatured: true },

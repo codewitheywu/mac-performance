@@ -12,7 +12,9 @@ The content is real. The phone numbers, hours, services, accessories, photos and
 - `/accessories`
 - `/contacts`
 - `/login` and `/signup`, which save and send nothing, because accounts need a database. Log in goes straight in with no password
-- `/appointments`, the customer area: bookings, plus an accessories shop list that can be fitted on a visit. Both stay in that browser
+- `/appointments`, the customer area: bookings, past visits and an accessories shop with a cart that can be added to a visit. Bookings and the cart stay in that browser
+
+Prices, products, stock and the demo customer are invented for the demo and live in `src/lib/demo-data.ts`. Every page that shows them says so.
 
 ## Run it
 
