@@ -14,7 +14,7 @@ Direction: a real performance garage, not a tech startup. The site should look l
 ## Surfaces
 
 - Bento grid layout for feature sections.
-- One glass for the whole site: the `glass-card` utility in `globals.css`, with a dark base for legibility, fine grain and a lit gold edge. Adjust it per use with `--glass-tint` and check contrast over the brightest photo behind it.
+- One glass for the whole site: the `glass-card` utility in `globals.css`, with a dark base for legibility and a lit gold edge. Adjust it per use with `--glass-tint` and check contrast over the brightest photo behind it.
 - Glass always sits over a photo or a light beam. Over flat black, blur is invisible and wastes GPU.
 - Panels overlap photos instead of sitting beside them. Never over the MAC logo on the sign.
 - One elevation style across the site. Do not mix glass, solid, and shadowed cards in the same section.
