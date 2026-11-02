@@ -3,8 +3,8 @@
 import { useSyncExternalStore } from "react";
 
 import type { BusinessInfo } from "@/lib/content";
+import { hourLabel, manilaNow } from "@/lib/manila-time";
 
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const WEEKDAY_NAMES = [
   "Sunday",
   "Monday",
@@ -14,25 +14,6 @@ const WEEKDAY_NAMES = [
   "Friday",
   "Saturday",
 ];
-
-function hourLabel(hour: number) {
-  if (hour === 12) return "12 PM";
-  return hour < 12 ? `${hour} AM` : `${hour - 12} PM`;
-}
-
-function manilaNow() {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Manila",
-    weekday: "short",
-    hour: "numeric",
-    hour12: false,
-  }).formatToParts(new Date());
-  const part = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
-  return {
-    day: WEEKDAYS.indexOf(part("weekday")),
-    hour: Number(part("hour")) % 24,
-  };
-}
 
 function statusText(openHours: BusinessInfo["openHours"]) {
   const { day, hour } = manilaNow();

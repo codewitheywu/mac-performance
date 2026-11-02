@@ -11,7 +11,8 @@ The content is real. The phone numbers, hours, services, accessories, photos and
 - `/services`
 - `/accessories`
 - `/contacts`
-- `/login` and `/signup`, which check what you type but save and send nothing, because accounts need a database
+- `/login` and `/signup`, which save and send nothing, because accounts need a database. Log in goes straight in with no password
+- `/appointments`, the customer area, where sample bookings stay in that browser
 
 ## Run it
 
@@ -39,7 +40,8 @@ Open `http://<computer's IP address>:3121` on the phone. On Windows, allow Node 
 - Replace `src/lib/shop-data.ts` and `src/lib/google-snapshot.ts` with a database and CMS.
 - Add `GOOGLE_PLACES_API_KEY` and `GOOGLE_PLACE_ID` for a live rating. See `.env.example`.
 - Set the final domain in `src/lib/site.ts`.
-- Build real accounts behind `/login` and `/signup`, with a privacy notice for the details they collect.
+- Build real accounts behind `/login` and `/signup`, with a privacy notice for the details they collect, and protect `/appointments`, which is open to anyone until then.
+- Save bookings in the database so they reach the shop, and set the real booking rules.
 
 The copied rating and reviews in `src/lib/google-snapshot.ts` do not update themselves. Refresh them, or add the API key.
 

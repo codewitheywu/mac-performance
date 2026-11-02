@@ -17,3 +17,4 @@ export const NAV_LINKS: NavLink[] = [
 // Not in NAV_LINKS: they have no home section and stay out of the sitemap.
 export const LOGIN_LINK = { label: "Log in", href: "/login" };
 export const SIGNUP_LINK = { label: "Sign up", href: "/signup" };
+export const APPOINTMENTS_LINK = { label: "Appointments", href: "/appointments" };

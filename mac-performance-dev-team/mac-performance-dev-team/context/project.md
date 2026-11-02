@@ -23,7 +23,8 @@ The address above is for your reference only. In the UI it is rendered from the 
 
 Public: `/`, `/about`, `/services`, `/accessories`, `/contacts`
 Account: `/login`, `/signup` (`noindex`, not in the sitemap)
-Customer area and `/admin` area: structure lives in the repo; inspect `app/` before adding routes.
+Customer: `/appointments` (`noindex`, not in the sitemap), in the `(account)` route group
+`/admin` area: structure lives in the repo; inspect `app/` before adding routes.
 
 ## Users and permissions
 
@@ -48,4 +49,5 @@ This build is a sample to show the owner. There is no database yet, so rules 1 a
 
 - Business data lives in `src/lib/shop-data.ts`, copied from the shop sign, macperformance.ph and the Google listing.
 - The rating and reviews live in `src/lib/google-snapshot.ts`, dated November 2026. A Places API key replaces them with live data automatically.
-- `/login` and `/signup` are front end only. Their form validates in the browser and sends nothing, and each page says so. Real accounts need PostgreSQL, an auth library and a Server Action that re-runs `validateAuthForm` from `src/lib/auth-rules.ts`, per `roles/05-security.md`.
+- `/login` and `/signup` are front end only and send nothing, and each page says so. Log in goes straight to `/appointments` with no credentials, by the project lead's decision. Sign up validates in the browser, then does the same. Real accounts need PostgreSQL, an auth library and a Server Action that re-runs `validateAuthForm` from `src/lib/auth-rules.ts`, per `roles/05-security.md`.
+- `/appointments` has no gate, because there are no sessions, so it must never show real customer data until accounts exist. Bookings stay in the visitor's browser (`src/lib/appointment-store.ts`), the page says so, and the shop does not receive them. One slot an hour is a stand-in until the owner sets booking rules. `src/lib/appointment-rules.ts` is ready to re-run on the server.

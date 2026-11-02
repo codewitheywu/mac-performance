@@ -201,6 +201,24 @@ dialog::backdrop {
   }
 }
 
+/* 16px text: iOS zooms the whole page when it focuses anything smaller. */
+@utility field-input {
+  background-color: rgb(0 0 0 / 0.45);
+  border-radius: var(--radius-sm);
+  border-style: solid;
+  border-width: 1px;
+  color: var(--color-white);
+  font-size: var(--text-base);
+  height: 3rem;
+  padding-inline: 1rem;
+  transition: border-color var(--lift-timing);
+  width: 100%;
+
+  &:focus {
+    border-color: var(--color-gold);
+  }
+}
+
 /* Small gold label over a heading. */
 @utility eyebrow {
   color: var(--color-gold);
